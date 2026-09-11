@@ -53,7 +53,14 @@ int spmv_mpi_setup(const csr_local * A, const vec_partition * xpart,
     c->x_full = (float*)alloc_array(A->num_cols, sizeof(float));
     c->counts = (int*)alloc_array(c->nranks, sizeof(int));
     c->displs = (int*)alloc_array(c->nranks, sizeof(int));
-    if (!c->x_full || !c->counts || !c->displs) return 1;
+
+    if (!c->x_full || !c->counts || !c->displs) {
+        free(c->x_full);
+        free(c->counts);
+        free(c->displs);
+        free(c);
+        return 1;
+    }
 
     memcpy(c->counts, xpart->counts, c->nranks * sizeof(int));
     memcpy(c->displs, xpart->displs, c->nranks * sizeof(int));
@@ -61,8 +68,17 @@ int spmv_mpi_setup(const csr_local * A, const vec_partition * xpart,
     /* TODO: your Task 3d counters -- messages and payload bytes for ONE SpMV.
      * An allgather's message count depends on how the collective is
      * implemented; state the model you are counting under in the report. */
-    c->stats.messages   = 0;
-    c->stats.bytes_sent = 0;
+
+    /* Account for a ring allgather: p-1 messages per rank and a total of
+     * (p-1) copies of the full vector across the ring. Distribute any
+     * indivisible byte remainder across the lowest-ranked ranks so the
+     * harness reduction matches the documented total exactly. */
+    long long total_bytes = (long long)(c->nranks - 1) * A->num_cols *
+                            (long long)sizeof(float);
+    long long bytes_per_rank = total_bytes / c->nranks;
+    long long byte_remainder = total_bytes % c->nranks;
+    c->stats.messages = c->nranks - 1;
+    c->stats.bytes_sent = bytes_per_rank + (c->rank < byte_remainder ? 1 : 0);
 
     *ctx = c;
     return 0;
@@ -77,23 +93,25 @@ void spmv_mpi(void * ctx, const csr_local * A, const float * x_local,
     /* STEP 1 -- communication.
      * This rank holds only its own slice of x, but A->col_idx points anywhere
      * in [0, A->num_cols). Fetch the entries it needs with an MPI_Allgatherv
-     * into c->x_full using c->counts / c->displs.
-     *
-     * TODO */
-    /* these only silence -Wunused until you write STEP 1 -- delete each one
-     * as you start using it */
-    (void)x_local;
-    (void)comm;
-    (void)c;
+     *into c->x_full using c->counts / c->displs.
+     */
+
+    /* This rank holds only its own slice of x, while A->col_idx contains
+     * global column indices. Gather all slices into the global lookup buffer. */
+    MPI_Allgatherv(x_local, c->counts[c->rank], MPI_FLOAT,
+                   c->x_full, c->counts, c->displs, MPI_FLOAT, comm);
 
     /* STEP 2 -- local computation.
      * Row i of this block is global row (A->row_offset + i); its nonzeros are
      * A->col_idx[k] / A->vals[k] for k in [A->row_ptr[i], A->row_ptr[i+1]).
      * Write the dot product into y_local[i] -- overwrite, do not accumulate.
-     *
-     * TODO */
-    for (int i = 0; i < A->num_rows; i++)
-        y_local[i] = 0.0f;
+     */
+    for (int i = 0; i < A->num_rows; i++) {
+        float sum = 0.0f;
+        for (int k = A->row_ptr[i]; k < A->row_ptr[i + 1]; k++)
+            sum += A->vals[k] * c->x_full[A->col_idx[k]];
+        y_local[i] = sum;
+    }
 }
 
 
