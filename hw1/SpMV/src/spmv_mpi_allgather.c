@@ -54,13 +54,7 @@ int spmv_mpi_setup(const csr_local * A, const vec_partition * xpart,
     c->counts = (int*)alloc_array(c->nranks, sizeof(int));
     c->displs = (int*)alloc_array(c->nranks, sizeof(int));
 
-    if (!c->x_full || !c->counts || !c->displs) {
-        free(c->x_full);
-        free(c->counts);
-        free(c->displs);
-        free(c);
-        return 1;
-    }
+    if (!c->x_full || !c->counts || !c->displs) return 1;
 
     memcpy(c->counts, xpart->counts, c->nranks * sizeof(int));
     memcpy(c->displs, xpart->displs, c->nranks * sizeof(int));
