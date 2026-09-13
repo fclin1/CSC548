@@ -1,0 +1,10 @@
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=8
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 35046, min 3024, avg 18360 (imbalance 1.91x)
+setup: 0.0076 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 1 iterations
+	benchmarking CSR-SpMV (MPI):   0.1333 ms (  2.20 GFLOP/s  20.5 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 0.665 MB

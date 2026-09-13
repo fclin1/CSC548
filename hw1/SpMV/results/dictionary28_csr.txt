@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+	Performing 20 iterations
+	benchmarking CSR-SpMV:   0.5865 ms (  0.61 GFLOP/s   4.4 GB/s)

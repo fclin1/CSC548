@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+	Performing 20 iterations
+	benchmarking CSR-SpMV:   5.4045 ms (  2.21 GFLOP/s  13.3 GB/s)

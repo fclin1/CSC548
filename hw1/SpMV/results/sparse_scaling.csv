@@ -1,0 +1,60 @@
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,1,20,0.479598,0.6125,5.6864,0.1101,0,0,146880,146880,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,1,20,0.596531,0.5970,4.2883,0.1585,0,0,178076,178076,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,1,20,0.199013,1.9758,13.8308,0.1544,0,0,196608,196608,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,1,20,5.441378,2.1946,13.2581,3.7874,0,0,5970947,5970947,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,1,20,12.270601,2.4182,14.6084,9.6886,0,0,14836504,14836504,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,1,20,18.031845,0.6137,4.5569,4.9694,0,0,5533214,5533214,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,2,20,0.395063,0.7436,6.9031,0.5044,1,45652,130488,16392,1.7768,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,2,20,0.382745,0.9305,6.6836,1.7516,2,47028,136235,41841,1.5301,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,2,20,0.117549,3.3451,23.4159,1.4247,2,32768,98304,98304,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,2,20,2.800552,4.2641,25.7600,6.2620,2,90296,3020372,2950575,1.0117,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,2,20,7.645050,3.8813,23.4470,8.9159,2,60860,8929635,5906869,1.2037,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,2,20,8.661641,1.2776,9.4865,5.6655,2,61192,2788595,2744619,1.0079,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,4,20,0.204795,1.4344,13.3166,5.9467,7,96144,70002,6048,1.9064,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,4,20,0.196780,1.8099,12.9999,5.1846,10,116992,83226,13959,1.8694,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,4,20,0.061817,6.3610,44.5271,5.1155,8,65536,49152,49152,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,4,20,2.124401,5.6213,33.9588,13.9059,8,241428,2241598,778774,1.5017,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,4,20,4.409217,6.7298,40.6543,11.0978,10,140372,5108816,2829221,1.3774,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,4,20,3.729553,2.9672,22.0318,10.8506,12,80500,1397036,1364290,1.0099,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,8,20,0.110332,2.6625,24.7179,7.3195,27,138344,35046,3024,1.9088,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,8,20,0.098843,3.6032,25.8806,6.9908,40,171544,51421,6435,2.3101,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,8,20,0.035052,11.2180,78.5259,6.1688,24,98304,24576,24576,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,20,1.121921,10.6442,64.3024,12.9056,32,521652,1224095,249006,1.6401,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,20,2.404347,12.3414,74.5539,11.5460,34,234724,2673639,1355550,1.4417,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,20,1.851736,5.9762,44.3739,9.4385,54,138772,724199,672837,1.0471,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,16,20,0.054665,5.3738,49.8890,17.7681,96,172088,17582,1494,1.9153,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,16,20,0.039274,9.0684,65.1352,15.6936,162,217416,32138,2795,2.8876,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,16,20,0.020897,18.8171,131.7196,9.0627,64,131072,12288,12288,1.0000,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,16,20,0.593080,20.1354,121.6398,18.1121,110,1067300,634793,111603,1.7010,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,16,20,1.108008,26.7805,161.7799,17.9645,88,367140,1343537,677649,1.4489,SKIP,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,16,20,0.942375,11.7431,87.1933,15.0132,178,338576,381866,334703,1.1042,SKIP,0.000e+00

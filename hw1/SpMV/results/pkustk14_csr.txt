@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+	Performing 20 iterations
+	benchmarking CSR-SpMV:  12.4178 ms (  2.39 GFLOP/s  14.4 GB/s)
