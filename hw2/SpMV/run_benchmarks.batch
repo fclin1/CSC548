@@ -1,0 +1,141 @@
+#!/bin/bash
+#SBATCH -J hw2_spmv             # Job name
+#SBATCH -N 1                    # 1 node
+#SBATCH -c 16                   # 16 CPU cores per task (supports up to 16 threads)
+#SBATCH -p skylake              # Partition (change to your assigned partition if different)
+#SBATCH -t 00:45:00             # Walltime hh:mm:ss
+#SBATCH -o hw2_benchmarks.%j.out # Standard output (%j = Job ID)
+#SBATCH -e hw2_benchmarks.%j.err # Standard error
+
+set -e
+
+echo "=========================================================="
+echo "Starting HW2 OpenMP + SIMD Benchmark Suite on $(hostname)"
+echo "Date: $(date)"
+echo "=========================================================="
+
+cd "$(dirname "$0")"
+
+mkdir -p results
+
+echo "Recording hardware information..."
+lscpu > results/hardware_info.txt
+uname -a >> results/hardware_info.txt
+
+echo "Building all kernels..."
+make clean
+make all
+
+MATRICES=(
+    "matrices/D6-6.mtx"
+    "matrices/dictionary28.mtx"
+    "matrices/bfly.mtx"
+    "matrices/Ga3As3H12.mtx"
+    "matrices/pkustk14.mtx"
+    "matrices/roadNet-CA.mtx"
+)
+
+for mat in "${MATRICES[@]}"; do
+    if [ ! -f "$mat" ]; then
+        echo "Error: Matrix $mat not found! Please check matrices/ directory."
+        exit 1
+    fi
+done
+
+CSV_HEADER=$(./spmv_omp_csr --csv-header)
+
+# ------------------------------------------------------------
+# Experiment 1: Thread Strong-Scaling (t = 1, 2, 4, 8, 16)
+# ------------------------------------------------------------
+echo "=========================================================="
+echo "Experiment 1: Thread Strong-Scaling (t = 1, 2, 4, 8, 16)"
+echo "=========================================================="
+
+echo "$CSV_HEADER" > results/scaling_omp_csr.csv
+echo "$CSV_HEADER" > results/scaling_omp_ell.csv
+
+THREADS=(1 2 4 8 16)
+for t in "${THREADS[@]}"; do
+    echo "--- Running with $t threads ---"
+    for mat in "${MATRICES[@]}"; do
+        ./spmv_omp_csr "$mat" --threads="$t" --schedule=static --partition=row --csv >> results/scaling_omp_csr.csv
+        ./spmv_omp_ell "$mat" --threads="$t" --schedule=static --partition=row --csv >> results/scaling_omp_ell.csv
+    done
+done
+
+# ------------------------------------------------------------
+# Experiment 2: Task 3 Load Balancing on Ga3As3H12 & pkustk14
+# ------------------------------------------------------------
+echo "=========================================================="
+echo "Experiment 2: Task 3 Load Balancing on Ga3As3H12 & pkustk14"
+echo "=========================================================="
+
+echo "$CSV_HEADER" > results/load_balance_csr.csv
+echo "$CSV_HEADER" > results/load_balance_ell.csv
+
+HIGH_VAR_MATRICES=(
+    "matrices/Ga3As3H12.mtx"
+    "matrices/pkustk14.mtx"
+)
+SCHEDULES=("static" "dynamic,1" "dynamic,16" "dynamic,64" "guided")
+PARTITIONS=("row" "nnz")
+
+for mat in "${HIGH_VAR_MATRICES[@]}"; do
+    echo "--- Load balancing sweeps on $mat (8 threads) ---"
+    for p in "${PARTITIONS[@]}"; do
+        for s in "${SCHEDULES[@]}"; do
+            if [ "$p" == "nnz" ] && [ "$s" != "static" ]; then
+                continue
+            fi
+            ./spmv_omp_csr "$mat" --threads=8 --schedule="$s" --partition="$p" --csv >> results/load_balance_csr.csv
+            ./spmv_omp_ell "$mat" --threads=8 --schedule="$s" --partition="$p" --csv >> results/load_balance_ell.csv
+        done
+    done
+done
+
+# ------------------------------------------------------------
+# Experiment 3: Task 4 SIMD vs Scalar (8 threads)
+# ------------------------------------------------------------
+echo "=========================================================="
+echo "Experiment 3: Task 4 SIMD vs Scalar (8 threads)"
+echo "=========================================================="
+
+echo "$CSV_HEADER" > results/simd_compare_csr_scalar.csv
+echo "$CSV_HEADER" > results/simd_compare_csr_simd.csv
+echo "$CSV_HEADER" > results/simd_compare_ell_scalar.csv
+echo "$CSV_HEADER" > results/simd_compare_ell_simd.csv
+
+for mat in "${MATRICES[@]}"; do
+    echo "--- SIMD comparison on $mat ---"
+    ./spmv_omp_csr  "$mat" --threads=8 --schedule=static --partition=row --csv >> results/simd_compare_csr_scalar.csv
+    ./spmv_simd_csr "$mat" --threads=8 --schedule=static --partition=row --csv >> results/simd_compare_csr_simd.csv
+    ./spmv_omp_ell  "$mat" --threads=8 --schedule=static --partition=row --csv >> results/simd_compare_ell_scalar.csv
+    ./spmv_simd_ell "$mat" --threads=8 --schedule=static --partition=row --csv >> results/simd_compare_ell_simd.csv
+done
+
+# ------------------------------------------------------------
+# Experiment 4: Sequential CSR Baseline
+# ------------------------------------------------------------
+echo "=========================================================="
+echo "Experiment 4: Sequential CSR Baseline"
+echo "=========================================================="
+for mat in "${MATRICES[@]}"; do
+    ./spmv_csr "$mat" > "results/$(basename "$mat" .mtx)_baseline.txt"
+done
+
+# ------------------------------------------------------------
+# Combined CSV with kernel column
+# ------------------------------------------------------------
+COMBINED_CSV="results/all_benchmarks_combined.csv"
+echo "kernel,$CSV_HEADER" > "$COMBINED_CSV"
+
+awk '{print "spmv_omp_csr," $0}' <(tail -n +2 results/scaling_omp_csr.csv) >> "$COMBINED_CSV"
+awk '{print "spmv_omp_ell," $0}' <(tail -n +2 results/scaling_omp_ell.csv) >> "$COMBINED_CSV"
+awk '{print "spmv_simd_csr," $0}' <(tail -n +2 results/simd_compare_csr_simd.csv) >> "$COMBINED_CSV"
+awk '{print "spmv_simd_ell," $0}' <(tail -n +2 results/simd_compare_ell_simd.csv) >> "$COMBINED_CSV"
+
+echo "=========================================================="
+echo "All benchmarks completed successfully!"
+echo "Outputs stored in SpMV/results/:"
+ls -lh results/
+echo "=========================================================="
