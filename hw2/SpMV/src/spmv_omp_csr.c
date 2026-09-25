@@ -58,11 +58,34 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
      * rows around the nonzero index t*nnz/nthreads -- a binary search of
      * A->row_ptr finds the row boundary. Do not split a row between threads:
      * keeping whole rows means each y[i] is still accumulated by one thread in
-     * one order, and no reduction is needed.
-     *
-     * The placeholder below hands every row to thread 0. */
-    for (int t = 0; t <= c->nthreads; t++)
-        c->start[t] = (t == 0) ? 0 : A->num_rows;
+     * one order, and no reduction is needed. */
+
+    /* Task 3b - Nonzero-based row partitioning via binary search */
+    c->start[0] = 0;
+    c->start[c->nthreads] = A->num_rows;
+    for (int t = 1; t < c->nthreads; t++) {
+        long long target = (long long)t * (long long)A->num_nonzeros / (long long)c->nthreads;
+        int low = 0, high = A->num_rows;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (A->row_ptr[mid] < target)
+                low = mid + 1;
+            else
+                high = mid;
+        }
+        int r = low;
+        if (r > 0) {
+            long long diff_curr = (long long)A->row_ptr[r] - target;
+            if (diff_curr < 0) diff_curr = -diff_curr;
+            long long diff_prev = target - (long long)A->row_ptr[r - 1];
+            if (diff_prev < 0) diff_prev = -diff_prev;
+            if (diff_curr > diff_prev)
+                r = r - 1;
+        }
+        if (r < c->start[t - 1])
+            r = c->start[t - 1];
+        c->start[t] = r;
+    }
 
     *ctx = c;
     return 0;
@@ -84,14 +107,60 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
          *
          * Row i's nonzeros are A->vals[k] at columns A->col_idx[k] for k in
          * [A->row_ptr[i], A->row_ptr[i+1]). Overwrite y[i]; do not accumulate. */
-        for (int i = 0; i < A->num_rows; i++)
-            y[i] = 0.0f;
+
+        /* Task 2 - OpenMP SpMV over CSR (Row-partitioned) */
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long my_rows = 0;
+            long long my_work = 0;
+
+            #pragma omp for schedule(runtime)
+            for (int i = 0; i < A->num_rows; i++) {
+                float sum = 0.0f;
+                int r_start = A->row_ptr[i];
+                int r_end   = A->row_ptr[i + 1];
+                for (int k = r_start; k < r_end; k++) {
+                    sum += A->vals[k] * x[A->col_idx[k]];
+                }
+                y[i] = sum;
+                my_rows++;
+                my_work += (long long)(r_end - r_start);
+            }
+
+            c->stats.rows[tid] = my_rows;
+            c->stats.work[tid] = my_work;
+        }
     } else {
         /* TODO (Task 3b): same kernel, but each thread walks its own row range
          * [c->start[t], c->start[t+1]) from setup -- one fixed range per
          * thread, so no schedule applies here. */
         for (int i = 0; i < A->num_rows; i++)
             y[i] = 0.0f;
+
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            int r_start = c->start[tid];
+            int r_end   = c->start[tid + 1];
+            long long my_rows = 0;
+            long long my_work = 0;
+
+            for (int i = r_start; i < r_end; i++) {
+                float sum = 0.0f;
+                int k_start = A->row_ptr[i];
+                int k_end   = A->row_ptr[i + 1];
+                for (int k = k_start; k < k_end; k++) {
+                    sum += A->vals[k] * x[A->col_idx[k]];
+                }
+                y[i] = sum;
+                my_rows++;
+                my_work += (long long)(k_end - k_start);
+            }
+
+            c->stats.rows[tid] = my_rows;
+            c->stats.work[tid] = my_work;
+        }
     }
 
     (void)x;
