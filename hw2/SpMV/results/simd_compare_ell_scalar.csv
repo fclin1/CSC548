@@ -1,0 +1,13 @@
+matrix,rows,cols,nnz,threads,sched_kind,sched_chunk,partition,iters,ms_per_iter,gflops,gbytes,setup_ms,max_row_len,ell_slots,pad_pct,work_max,work_min,imbalance,check,rel_err
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.092685,3.1694,98.8699,2.2083,6,723456,79.70,90432,90432,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.360216,0.9887,67.2372,4.6204,38,2000776,91.10,250116,250078,1.0001,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.039632,9.9218,64.4917,0.9935,4,196608,0.00,24576,24576,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,15,214.988309,0.0555,5.5554,275.4687,1622,99508078,94.00,12439118,12437496,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,108,26.087617,1.1374,23.2947,163.1953,333,50591358,70.67,6324003,6323670,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,492,4.741223,2.3341,61.5347,62.4785,12,23655372,76.61,2956932,2956920,1.0000,PASS,0.000e+00

@@ -1,0 +1,145 @@
+kernel,matrix,rows,cols,nnz,threads,sched_kind,sched_chunk,partition,iters,ms_per_iter,gflops,gbytes,setup_ms,max_row_len,ell_slots,pad_pct,work_max,work_min,imbalance,check,rel_err
+spmv_omp_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_csr,matrices/D6-6.mtx,120576,23740,146880,1,static,0,row,800,0.548543,0.5355,4.9717,0.0011,0,0,0.00,146880,146880,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_csr,matrices/dictionary28.mtx,52652,52652,178076,1,static,0,row,800,0.654929,0.5438,3.9060,0.0010,0,0,0.00,178076,178076,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_csr,matrices/bfly.mtx,49152,49152,196608,1,static,0,row,800,0.271405,1.4488,10.1417,0.0011,0,0,0.00,196608,196608,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,1,static,0,row,382,7.802030,1.5306,9.2466,0.0032,0,0,0.00,5970947,5970947,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_csr,matrices/pkustk14.mtx,151926,151926,14836504,1,static,0,row,161,18.545205,1.6000,9.6658,0.0029,0,0,0.00,14836504,14836504,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,1,static,0,row,167,17.234030,0.6421,4.7678,0.0026,0,0,0.00,5533214,5533214,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_csr,matrices/D6-6.mtx,120576,23740,146880,2,static,0,row,800,0.427496,0.6872,6.3794,0.0015,0,0,0.00,130488,16392,1.7768,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_csr,matrices/dictionary28.mtx,52652,52652,178076,2,static,0,row,800,0.400083,0.8902,6.3940,0.0013,0,0,0.00,136235,41841,1.5301,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_csr,matrices/bfly.mtx,49152,49152,196608,2,static,0,row,800,0.137284,2.8642,20.0497,0.0011,0,0,0.00,98304,98304,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,2,static,0,row,767,4.003931,2.9825,18.0178,0.0033,0,0,0.00,3020372,2950575,1.0117,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_csr,matrices/pkustk14.mtx,151926,151926,14836504,2,static,0,row,262,11.466064,2.5879,15.6334,0.0039,0,0,0.00,8929635,5906869,1.2037,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,2,static,0,row,328,8.731480,1.2674,9.4106,0.0029,0,0,0.00,2788595,2744619,1.0079,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_csr,matrices/D6-6.mtx,120576,23740,146880,4,static,0,row,800,0.217725,1.3492,12.5258,0.0022,0,0,0.00,70002,6048,1.9064,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_csr,matrices/dictionary28.mtx,52652,52652,178076,4,static,0,row,800,0.211665,1.6826,12.0857,0.0018,0,0,0.00,83226,13959,1.8694,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_csr,matrices/bfly.mtx,49152,49152,196608,4,static,0,row,800,0.078541,5.0065,35.0454,0.0015,0,0,0.00,49152,49152,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,4,static,0,row,800,3.235038,3.6914,22.3003,0.0044,0,0,0.00,2241598,778774,1.5017,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_csr,matrices/pkustk14.mtx,151926,151926,14836504,4,static,0,row,448,6.706839,4.4243,26.7270,0.0061,0,0,0.00,5108816,2829221,1.3774,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,4,static,0,row,546,4.743404,2.3330,17.3228,0.0056,0,0,0.00,1397036,1364290,1.0099,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_csr,matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.130344,2.2537,20.9229,0.0029,0,0,0.00,35046,3024,1.9088,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_csr,matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.112024,3.1793,22.8356,0.0027,0,0,0.00,51421,6435,2.3101,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_csr,matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.050345,7.8104,54.6725,0.0017,0,0,0.00,24576,24576,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,800,1.906372,6.2642,37.8426,0.0049,0,0,0.00,1224095,249006,1.6401,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_csr,matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,722,3.963930,7.4858,45.2211,0.0085,0,0,0.00,2673639,1355550,1.4417,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,800,2.733787,4.0480,30.0568,0.0081,0,0,0.00,724199,672837,1.0471,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_csr,matrices/D6-6.mtx,120576,23740,146880,16,static,0,row,800,0.072009,4.0795,37.8727,0.0050,0,0,0.00,17582,1494,1.9153,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_csr,matrices/dictionary28.mtx,52652,52652,178076,16,static,0,row,800,0.066711,5.3387,38.3461,0.0039,0,0,0.00,32138,2795,2.8876,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_csr,matrices/bfly.mtx,49152,49152,196608,16,static,0,row,800,0.033287,11.8127,82.6892,0.0026,0,0,0.00,12288,12288,1.0000,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,16,static,0,row,800,1.063258,11.2314,67.8501,0.0068,0,0,0.00,634793,111603,1.7010,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_csr,matrices/pkustk14.mtx,151926,151926,14836504,16,static,0,row,800,2.384150,12.4459,75.1855,0.0116,0,0,0.00,1343537,677649,1.4489,PASS,0.000e+00
+spmv_omp_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,16,static,0,row,800,1.528729,7.2390,53.7498,0.0126,0,0,0.00,381866,334703,1.1042,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_ell,matrices/D6-6.mtx,120576,23740,146880,1,static,0,row,800,0.551113,0.5330,16.6278,2.1827,6,723456,79.70,723456,723456,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_ell,matrices/dictionary28.mtx,52652,52652,178076,1,static,0,row,800,2.485748,0.1433,9.7435,4.5184,38,2000776,91.10,2000776,2000776,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_ell,matrices/bfly.mtx,49152,49152,196608,1,static,0,row,800,0.207059,1.8991,12.3439,0.9990,4,196608,0.00,196608,196608,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,1,static,0,row,10,1267.234789,0.0094,0.9425,271.3743,1622,99508078,94.00,99508078,99508078,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_ell,matrices/pkustk14.mtx,151926,151926,14836504,1,static,0,row,24,121.399238,0.2444,5.0058,162.2442,333,50591358,70.67,50591358,50591358,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,1,static,0,row,113,26.440128,0.4185,11.0343,62.1369,12,23655372,76.61,23655372,23655372,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_ell,matrices/D6-6.mtx,120576,23740,146880,2,static,0,row,800,0.288315,1.0189,31.7839,2.2254,6,723456,79.70,361728,361728,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_ell,matrices/dictionary28.mtx,52652,52652,178076,2,static,0,row,800,1.335521,0.2667,18.1352,4.4456,38,2000776,91.10,1000388,1000388,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_ell,matrices/bfly.mtx,49152,49152,196608,2,static,0,row,800,0.104145,3.7757,24.5418,1.0005,4,196608,0.00,98304,98304,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,2,static,0,row,10,647.761679,0.0184,1.8438,272.1816,1622,99508078,94.00,49754850,49753228,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_ell,matrices/pkustk14.mtx,151926,151926,14836504,2,static,0,row,43,69.508177,0.4269,8.7429,163.3419,333,50591358,70.67,25295679,25295679,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,2,static,0,row,203,13.736515,0.8056,21.2390,62.5570,12,23655372,76.61,11827692,11827680,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_ell,matrices/D6-6.mtx,120576,23740,146880,4,static,0,row,800,0.148640,1.9763,61.6506,2.2089,6,723456,79.70,180864,180864,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_ell,matrices/dictionary28.mtx,52652,52652,178076,4,static,0,row,800,0.621136,0.5734,38.9929,4.4544,38,2000776,91.10,500194,500194,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_ell,matrices/bfly.mtx,49152,49152,196608,4,static,0,row,800,0.059090,6.6545,43.2543,0.9976,4,196608,0.00,49152,49152,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,4,static,0,row,10,374.596005,0.0319,3.1883,271.0073,1622,99508078,94.00,24878236,24876614,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_ell,matrices/pkustk14.mtx,151926,151926,14836504,4,static,0,row,79,38.612337,0.7685,15.7386,163.1618,333,50591358,70.67,12648006,12647673,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,4,static,0,row,291,8.430344,1.3127,34.6071,62.5677,12,23655372,76.61,5913852,5913840,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_ell,matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.092147,3.1879,99.4469,2.2752,6,723456,79.70,90432,90432,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_ell,matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.360949,0.9867,67.1006,4.5796,38,2000776,91.10,250116,250078,1.0001,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_ell,matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.039353,9.9921,64.9488,1.0367,4,196608,0.00,24576,24576,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,15,214.350432,0.0557,5.5719,277.4974,1622,99508078,94.00,12439118,12437496,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_ell,matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,108,25.956672,1.1432,23.4122,162.8554,333,50591358,70.67,6324003,6323670,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,499,4.775898,2.3171,61.0879,62.2941,12,23655372,76.61,2956932,2956920,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_omp_ell,matrices/D6-6.mtx,120576,23740,146880,16,static,0,row,800,0.110081,2.6686,83.2455,2.2544,6,723456,79.70,45216,45216,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_omp_ell,matrices/dictionary28.mtx,52652,52652,178076,16,static,0,row,800,0.184448,1.9309,131.3105,4.7187,38,2000776,91.10,125058,125020,1.0001,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_omp_ell,matrices/bfly.mtx,49152,49152,196608,16,static,0,row,800,0.026948,14.5917,94.8461,0.9974,4,196608,0.00,12288,12288,1.0000,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_omp_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,16,static,0,row,66,45.183735,0.2643,26.4330,213.9139,1622,99508078,94.00,6220370,6218748,1.0002,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_omp_ell,matrices/pkustk14.mtx,151926,151926,14836504,16,static,0,row,202,13.966697,2.1246,43.5109,164.3692,333,50591358,70.67,3162168,3161835,1.0001,PASS,0.000e+00
+spmv_omp_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_omp_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,16,static,0,row,800,2.641581,4.1893,110.4451,62.6976,12,23655372,76.61,1478472,1478460,1.0000,PASS,0.000e+00
+spmv_simd_csr,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_simd_csr,matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.145101,2.0245,18.7950,0.0030,0,0,0.00,35046,3024,1.9088,PASS,2.735e-08
+spmv_simd_csr,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_simd_csr,matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.123441,2.8852,20.7235,0.0029,0,0,0.00,51421,6435,2.3101,PASS,6.352e-08
+spmv_simd_csr,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_simd_csr,matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.050215,7.8307,54.8151,0.0020,0,0,0.00,24576,24576,1.0000,PASS,0.000e+00
+spmv_simd_csr,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_simd_csr,matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,800,1.106816,10.7894,65.1799,0.0064,0,0,0.00,1224095,249006,1.6401,PASS,4.751e-07
+spmv_simd_csr,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_simd_csr,matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,800,2.433404,12.1940,73.6637,0.0074,0,0,0.00,2673639,1355550,1.4417,PASS,2.164e-07
+spmv_simd_csr,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_simd_csr,matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,800,3.019629,3.6648,27.2116,0.0085,0,0,0.00,724199,672837,1.0471,PASS,3.491e-08
+spmv_simd_ell,Reading sparse matrix from file (matrices/D6-6.mtx): done
+spmv_simd_ell,matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.057604,5.0997,159.0832,2.1571,6,723456,79.70,90432,90432,1.0000,PASS,4.648e-08
+spmv_simd_ell,Reading sparse matrix from file (matrices/dictionary28.mtx): done
+spmv_simd_ell,matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.178149,1.9992,135.9532,4.5109,38,2000776,91.10,250192,249736,1.0004,PASS,6.378e-08
+spmv_simd_ell,Reading sparse matrix from file (matrices/bfly.mtx): done
+spmv_simd_ell,matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.025988,15.1304,98.3476,0.9881,4,196608,0.00,24576,24576,1.0000,PASS,5.159e-08
+spmv_simd_ell,Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+spmv_simd_ell,matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,65,45.764318,0.2609,26.0977,277.6418,1622,99508078,94.00,12443984,12426142,1.0004,PASS,1.920e-07
+spmv_simd_ell,Reading sparse matrix from file (matrices/pkustk14.mtx): done
+spmv_simd_ell,matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,151,17.463919,1.6991,34.7977,162.9873,333,50591358,70.67,6324336,6321006,1.0001,PASS,1.343e-07
+spmv_simd_ell,Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+spmv_simd_ell,matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,632,3.360231,3.2934,86.8243,63.7697,12,23655372,76.61,2956992,2956812,1.0000,PASS,4.612e-08

@@ -1,0 +1,61 @@
+matrix,rows,cols,nnz,threads,sched_kind,sched_chunk,partition,iters,ms_per_iter,gflops,gbytes,setup_ms,max_row_len,ell_slots,pad_pct,work_max,work_min,imbalance,check,rel_err
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,1,static,0,row,800,0.548543,0.5355,4.9717,0.0011,0,0,0.00,146880,146880,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,1,static,0,row,800,0.654929,0.5438,3.9060,0.0010,0,0,0.00,178076,178076,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,1,static,0,row,800,0.271405,1.4488,10.1417,0.0011,0,0,0.00,196608,196608,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,1,static,0,row,382,7.802030,1.5306,9.2466,0.0032,0,0,0.00,5970947,5970947,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,1,static,0,row,161,18.545205,1.6000,9.6658,0.0029,0,0,0.00,14836504,14836504,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,1,static,0,row,167,17.234030,0.6421,4.7678,0.0026,0,0,0.00,5533214,5533214,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,2,static,0,row,800,0.427496,0.6872,6.3794,0.0015,0,0,0.00,130488,16392,1.7768,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,2,static,0,row,800,0.400083,0.8902,6.3940,0.0013,0,0,0.00,136235,41841,1.5301,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,2,static,0,row,800,0.137284,2.8642,20.0497,0.0011,0,0,0.00,98304,98304,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,2,static,0,row,767,4.003931,2.9825,18.0178,0.0033,0,0,0.00,3020372,2950575,1.0117,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,2,static,0,row,262,11.466064,2.5879,15.6334,0.0039,0,0,0.00,8929635,5906869,1.2037,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,2,static,0,row,328,8.731480,1.2674,9.4106,0.0029,0,0,0.00,2788595,2744619,1.0079,PASS,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,4,static,0,row,800,0.217725,1.3492,12.5258,0.0022,0,0,0.00,70002,6048,1.9064,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,4,static,0,row,800,0.211665,1.6826,12.0857,0.0018,0,0,0.00,83226,13959,1.8694,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,4,static,0,row,800,0.078541,5.0065,35.0454,0.0015,0,0,0.00,49152,49152,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,4,static,0,row,800,3.235038,3.6914,22.3003,0.0044,0,0,0.00,2241598,778774,1.5017,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,4,static,0,row,448,6.706839,4.4243,26.7270,0.0061,0,0,0.00,5108816,2829221,1.3774,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,4,static,0,row,546,4.743404,2.3330,17.3228,0.0056,0,0,0.00,1397036,1364290,1.0099,PASS,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,8,static,0,row,800,0.130344,2.2537,20.9229,0.0029,0,0,0.00,35046,3024,1.9088,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,8,static,0,row,800,0.112024,3.1793,22.8356,0.0027,0,0,0.00,51421,6435,2.3101,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,8,static,0,row,800,0.050345,7.8104,54.6725,0.0017,0,0,0.00,24576,24576,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,800,1.906372,6.2642,37.8426,0.0049,0,0,0.00,1224095,249006,1.6401,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,722,3.963930,7.4858,45.2211,0.0085,0,0,0.00,2673639,1355550,1.4417,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,8,static,0,row,800,2.733787,4.0480,30.0568,0.0081,0,0,0.00,724199,672837,1.0471,PASS,0.000e+00
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+matrices/D6-6.mtx,120576,23740,146880,16,static,0,row,800,0.072009,4.0795,37.8727,0.0050,0,0,0.00,17582,1494,1.9153,PASS,0.000e+00
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+matrices/dictionary28.mtx,52652,52652,178076,16,static,0,row,800,0.066711,5.3387,38.3461,0.0039,0,0,0.00,32138,2795,2.8876,PASS,0.000e+00
+Reading sparse matrix from file (matrices/bfly.mtx): done
+matrices/bfly.mtx,49152,49152,196608,16,static,0,row,800,0.033287,11.8127,82.6892,0.0026,0,0,0.00,12288,12288,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,16,static,0,row,800,1.063258,11.2314,67.8501,0.0068,0,0,0.00,634793,111603,1.7010,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,16,static,0,row,800,2.384150,12.4459,75.1855,0.0116,0,0,0.00,1343537,677649,1.4489,PASS,0.000e+00
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+matrices/roadNet-CA.mtx,1971281,1971281,5533214,16,static,0,row,800,1.528729,7.2390,53.7498,0.0126,0,0,0.00,381866,334703,1.1042,PASS,0.000e+00

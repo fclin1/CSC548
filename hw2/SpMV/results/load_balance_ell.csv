@@ -1,0 +1,25 @@
+matrix,rows,cols,nnz,threads,sched_kind,sched_chunk,partition,iters,ms_per_iter,gflops,gbytes,setup_ms,max_row_len,ell_slots,pad_pct,work_max,work_min,imbalance,check,rel_err
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,row,15,215.594008,0.0554,5.5398,275.5405,1622,99508078,94.00,12439118,12437496,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,dynamic,1,row,15,203.152963,0.0588,5.8790,276.1244,1622,99508078,94.00,13321486,11556750,1.0710,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,dynamic,16,row,16,193.766050,0.0616,6.1638,278.7315,1622,99508078,94.00,13261472,11600544,1.0662,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,dynamic,64,row,16,191.920693,0.0622,6.2231,278.8995,1622,99508078,94.00,13287424,11522688,1.0682,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,guided,0,row,15,196.199261,0.0609,6.0874,278.9235,1622,99508078,94.00,14173036,10622478,1.1394,PASS,0.000e+00
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+matrices/Ga3As3H12.mtx,61349,61349,5970947,8,static,0,nnz,10,347.264491,0.0344,3.4393,278.3547,1622,99508078,94.00,23611454,7261694,1.8983,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,row,108,25.801231,1.1501,23.5533,163.9647,333,50591358,70.67,6324003,6323670,1.0000,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,dynamic,1,row,66,48.545054,0.6112,12.5184,164.3286,333,50591358,70.67,6673320,5976018,1.0553,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,dynamic,16,row,117,22.637905,1.3108,26.8445,163.0082,333,50591358,70.67,6707952,5937390,1.0607,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,dynamic,64,row,136,22.347596,1.3278,27.1933,162.7152,333,50591358,70.67,6606720,6031296,1.0447,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,guided,0,row,142,29.058595,1.0211,20.9131,162.9444,333,50591358,70.67,7440552,5107221,1.1766,PASS,0.000e+00
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+matrices/pkustk14.mtx,151926,151926,14836504,8,static,0,nnz,117,24.333717,1.2194,24.9737,162.9080,333,50591358,70.67,8638020,4390605,1.3659,PASS,0.000e+00
