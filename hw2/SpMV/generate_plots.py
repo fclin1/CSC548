@@ -6,6 +6,7 @@ Outputs high-resolution PNGs into results/plots/
 
 import os
 import sys
+import io
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,7 +28,26 @@ PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
 def matrix_shortname(path):
+    if not isinstance(path, str):
+        return str(path)
     return os.path.basename(path).replace(".mtx", "")
+
+def load_clean_csv(filepath):
+    """Loads CSV while cleanly stripping out status lines from stdout."""
+    if not os.path.exists(filepath):
+        return None
+    valid_lines = []
+    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            if line_str.startswith("Reading sparse matrix"):
+                continue
+            valid_lines.append(line_str)
+    if not valid_lines:
+        return None
+    return pd.read_csv(io.StringIO("\n".join(valid_lines)))
 
 # ============================================================
 # Figure 1: Memory Comparison (Task 5: CSR vs ELL Storage)
@@ -35,11 +55,11 @@ def matrix_shortname(path):
 def plot_figure_1_memory():
     print("Generating Figure 1: CSR vs ELL Memory Comparison...")
     csv_file = os.path.join(RESULTS_DIR, "scaling_omp_ell.csv")
-    if not os.path.exists(csv_file):
-        print(f"Skipping Fig 1: {csv_file} not found.")
+    df = load_clean_csv(csv_file)
+    if df is None:
+        print(f"Skipping Fig 1: {csv_file} not found or empty.")
         return
 
-    df = pd.read_csv(csv_file)
     df = df[df['threads'] == 1].drop_duplicates(subset=['matrix']).copy()
     df['mat_name'] = df['matrix'].apply(matrix_shortname)
 
@@ -57,14 +77,15 @@ def plot_figure_1_memory():
     rects1 = ax1.bar(x - width/2, df['csr_mb'], width, label='CSR Storage (MB)', color='#2b5c8f')
     rects2 = ax1.bar(x + width/2, df['ell_mb'], width, label='ELL Storage (MB)', color='#e26d5c')
 
-    ax1.set_ylabel('Memory Footprint (MB)', fontweight='bold')
+    ax1.set_ylabel('Memory Footprint (MB, Log Scale)', fontweight='bold')
     ax1.set_title('Task 5: Storage Footprint Comparison (CSR vs Column-Major ELL)', fontweight='bold')
     ax1.set_xticks(x)
-    ax1.set_xticklabels(df['mat_name'])
+    ax1.set_xticklabels(df['mat_name'], rotation=15, ha='right')
     ax1.set_yscale('log')
+    ax1.set_ylim(bottom=0.5, top=4500)
     ax1.legend(loc='upper left')
 
-    # Add text labels on top of bars showing padding percentage
+    # Add text labels on top of bars showing padding percentage and ELL/CSR multiplier
     for i, row in df.reset_index().iterrows():
         pad = row['pad_pct']
         ratio = row['ratio']
@@ -82,13 +103,12 @@ def plot_figure_1_memory():
 def plot_figure_2_scaling():
     print("Generating Figure 2: Thread Strong-Scaling...")
     csv_file = os.path.join(RESULTS_DIR, "scaling_omp_csr.csv")
-    if not os.path.exists(csv_file):
-        print(f"Skipping Fig 2: {csv_file} not found.")
+    df = load_clean_csv(csv_file)
+    if df is None:
+        print(f"Skipping Fig 2: {csv_file} not found or empty.")
         return
 
-    df = pd.read_csv(csv_file)
     df['mat_name'] = df['matrix'].apply(matrix_shortname)
-
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     threads = sorted(df['threads'].unique())
@@ -100,7 +120,10 @@ def plot_figure_2_scaling():
 
     for (mat, group), color in zip(df.groupby('mat_name'), colors):
         group = group.sort_values('threads')
-        t1_time = group[group['threads'] == 1]['ms_per_iter'].values[0]
+        t1_rows = group[group['threads'] == 1]['ms_per_iter'].values
+        if len(t1_rows) == 0:
+            continue
+        t1_time = t1_rows[0]
         speedup = t1_time / group['ms_per_iter'].values
         efficiency = speedup / group['threads'].values
 
@@ -117,7 +140,7 @@ def plot_figure_2_scaling():
     ax2.set_ylabel('Parallel Efficiency E(t) = S(t) / t', fontweight='bold')
     ax2.set_title('Parallel Efficiency (CSR)', fontweight='bold')
     ax2.set_xticks(threads)
-    ax2.set_ylim(0, 1.2)
+    ax2.set_ylim(0, 1.25)
     ax2.legend()
 
     plt.tight_layout()
@@ -131,11 +154,11 @@ def plot_figure_2_scaling():
 def plot_figure_3_load_balancing():
     print("Generating Figure 3: Load Imbalance vs Wall-Clock Runtime...")
     csv_file = os.path.join(RESULTS_DIR, "load_balance_csr.csv")
-    if not os.path.exists(csv_file):
-        print(f"Skipping Fig 3: {csv_file} not found.")
+    df = load_clean_csv(csv_file)
+    if df is None:
+        print(f"Skipping Fig 3: {csv_file} not found or empty.")
         return
 
-    df = pd.read_csv(csv_file)
     df['mat_name'] = df['matrix'].apply(matrix_shortname)
     df['config'] = df.apply(lambda r: f"{r['partition']}-{r['sched_kind']}" + (f",{r['sched_chunk']}" if r['sched_chunk'] > 0 else ""), axis=1)
 
@@ -180,14 +203,14 @@ def plot_figure_4_simd_speedup():
     ell_scal_file = os.path.join(RESULTS_DIR, "simd_compare_ell_scalar.csv")
     ell_simd_file = os.path.join(RESULTS_DIR, "simd_compare_ell_simd.csv")
 
-    if not all(os.path.exists(f) for f in [csr_scal_file, csr_simd_file, ell_scal_file, ell_simd_file]):
-        print("Skipping Fig 4: Missing SIMD comparison CSV files.")
-        return
+    df_csr_scal = load_clean_csv(csr_scal_file)
+    df_csr_simd = load_clean_csv(csr_simd_file)
+    df_ell_scal = load_clean_csv(ell_scal_file)
+    df_ell_simd = load_clean_csv(ell_simd_file)
 
-    df_csr_scal = pd.read_csv(csr_scal_file)
-    df_csr_simd = pd.read_csv(csr_simd_file)
-    df_ell_scal = pd.read_csv(ell_scal_file)
-    df_ell_simd = pd.read_csv(ell_simd_file)
+    if any(d is None for d in [df_csr_scal, df_csr_simd, df_ell_scal, df_ell_simd]):
+        print("Skipping Fig 4: Missing or invalid SIMD comparison CSV files.")
+        return
 
     df_csr_scal['mat_name'] = df_csr_scal['matrix'].apply(matrix_shortname)
     df_csr_simd['mat_name'] = df_csr_simd['matrix'].apply(matrix_shortname)
@@ -216,9 +239,10 @@ def plot_figure_4_simd_speedup():
 
     ax.axhline(1.0, color='black', linestyle='--', linewidth=1)
     ax.set_ylabel('Speedup S = T_scalar / T_simd (8 threads)', fontweight='bold')
+    ax.set_ylim(0, 5.5)
     ax.set_title('Task 4: SIMD Vectorization Speedup (CSR vs Column-Major ELL)', fontweight='bold')
     ax.set_xticks(x)
-    ax.set_xticklabels(matrices)
+    ax.set_xticklabels(matrices, rotation=15, ha='right')
     ax.legend()
 
     for rects in [rects1, rects2]:
@@ -240,24 +264,24 @@ def plot_figure_4_simd_speedup():
 def plot_figure_5_roofline():
     print("Generating Figure 5: Roofline Model...")
     combined_file = os.path.join(RESULTS_DIR, "all_benchmarks_combined.csv")
-    if not os.path.exists(combined_file):
-        print(f"Skipping Fig 5: {combined_file} not found.")
+    df = load_clean_csv(combined_file)
+    if df is None:
+        print(f"Skipping Fig 5: {combined_file} not found or empty.")
         return
 
-    df = pd.read_csv(combined_file)
-
-    # Machine specs (EPYC 7302P compute node)
-    # Peak FP32 GFLOP/s = 16 cores * 2 FMAs * 8 lanes * 3.0 GHz = 768 GFLOP/s
-    peak_gflops = 768.0
-    # Peak DRAM Bandwidth: 8 channels * 3200 MT/s * 8 B = 204.8 GB/s (practical achievable ~160 GB/s)
-    peak_bandwidth_gbs = 160.0
+    # Machine specs from node c11 hardware_info.txt:
+    # 2x Intel Xeon Silver 4110 CPUs @ 2.10 GHz (16 cores total)
+    # Peak FP32 GFLOP/s = 16 cores * 2 FMAs * 8 lanes * 2.10 GHz = 537.6 GFLOP/s
+    peak_gflops = 537.6
+    # Dual-socket theoretical DRAM Bandwidth = 230.4 GB/s (practical STREAM ~160-200 GB/s)
+    peak_bandwidth_gbs = 200.0
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
     ai_range = np.logspace(-2, 2, 500)
     # Roofline boundary: min(Peak_GFLOPs, AI * Peak_BW)
     roofline = np.minimum(peak_gflops, ai_range * peak_bandwidth_gbs)
-    ax.plot(ai_range, roofline, 'k-', linewidth=2.5, label='Machine Roofline (EPYC 7302P)')
+    ax.plot(ai_range, roofline, 'k-', linewidth=2.5, label='Machine Roofline (Xeon Silver 4110, 16 cores)')
     ax.text(0.015, peak_bandwidth_gbs * 0.015 * 1.3, f'Memory Bandwidth Ceiling: {peak_bandwidth_gbs:.0f} GB/s',
             rotation=38, fontweight='bold', color='black', fontsize=9)
     ax.axhline(peak_gflops, color='k', linestyle=':', alpha=0.5)
@@ -267,25 +291,49 @@ def plot_figure_5_roofline():
     # SpMV Arithmetic Intensity line (~0.17 FLOP/byte)
     ax.axvline(0.17, color='red', linestyle='--', linewidth=1.5, alpha=0.7, label='SpMV AI ~0.17 FLOP/byte')
 
-    # Scatter experimental points
-    # Calculate empirical AI = gflops / gbytes
+    # 1. Parse and plot Sequential Scalar Baseline (spmv_csr)
+    import glob, re
+    base_ais = []
+    base_gflops = []
+    for f in glob.glob(os.path.join(RESULTS_DIR, "*_baseline.txt")):
+        with open(f) as fh:
+            text = fh.read()
+        m = re.search(r'benchmarking CSR-SpMV:\s+[\d\.]+\s+ms\s+\(\s+([\d\.]+)\s+GFLOP/s\s+([\d\.]+)\s+GB/s\)', text)
+        if m:
+            gf = float(m.group(1))
+            gb = float(m.group(2))
+            base_gflops.append(gf)
+            base_ais.append(gf / gb)
+
+    if base_ais:
+        ax.scatter(base_ais, base_gflops, label='Scalar Baseline (spmv_csr)', marker='*',
+                   color='black', s=110, zorder=5)
+
+    # 2. Plot OpenMP and SIMD points
     df['ai'] = df['gflops'] / df['gbytes']
 
+    labels_map = {
+        'spmv_omp_csr': 'OpenMP CSR (1–16 threads)',
+        'spmv_omp_ell': 'OpenMP ELL (1–16 threads)',
+        'spmv_simd_csr': 'SIMD CSR (AVX2, 8 threads)',
+        'spmv_simd_ell': 'SIMD ELL (AVX2, 8 threads)'
+    }
     markers = {'spmv_omp_csr': 'o', 'spmv_omp_ell': '^', 'spmv_simd_csr': 's', 'spmv_simd_ell': 'D'}
     colors = {'spmv_omp_csr': '#1f77b4', 'spmv_omp_ell': '#2ca02c', 'spmv_simd_csr': '#ff7f0e', 'spmv_simd_ell': '#d62728'}
 
     for kernel, group in df.groupby('kernel'):
-        ax.scatter(group['ai'], group['gflops'], label=kernel, marker=markers.get(kernel, 'o'),
-                   color=colors.get(kernel, 'gray'), alpha=0.7, s=40)
+        ax.scatter(group['ai'], group['gflops'], label=labels_map.get(kernel, kernel),
+                   marker=markers.get(kernel, 'o'), color=colors.get(kernel, 'gray'),
+                   alpha=0.75, s=45)
 
     ax.set_xscale('log')
     ax.set_yscale('log')
     ax.set_xlim(0.01, 20)
-    ax.set_ylim(0.1, 1500)
+    ax.set_ylim(0.1, 1200)
     ax.set_xlabel('Arithmetic Intensity (FLOP/byte)', fontweight='bold')
     ax.set_ylabel('Attained Performance (GFLOP/s)', fontweight='bold')
     ax.set_title('Task 6: Empirical Roofline Model for SpMV Kernels', fontweight='bold')
-    ax.legend(loc='lower right')
+    ax.legend(loc='lower right', framealpha=0.9)
 
     plt.tight_layout()
     plt.savefig(os.path.join(PLOTS_DIR, "fig5_roofline.png"))
@@ -298,4 +346,4 @@ if __name__ == '__main__':
     plot_figure_3_load_balancing()
     plot_figure_4_simd_speedup()
     plot_figure_5_roofline()
-    print("All plots generated in results/plots/!")
+    print("All plots generated successfully in results/plots/!")
