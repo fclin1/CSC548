@@ -1,0 +1,14 @@
+
+ Performance counter stats for './gemm_naive --n=1024 --iters=1 --no-check':
+
+       21464363493      cycles:u                                                              
+       17245139557      instructions:u                   #    0.80  insn per cycle            
+         337569489      cache-misses:u                   #    6.83% of all cache refs         
+        4944225493      cache-references:u                                                    
+
+       6.163231860 seconds time elapsed
+
+       5.661358000 seconds user
+       0.007405000 seconds sys
+
+

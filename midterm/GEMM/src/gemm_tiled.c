@@ -27,6 +27,26 @@
 void gemm(int n, const float * A, const float * B, float * C,
           const gemm_opts * opts)
 {
-    /* TODO: ikj, blocked by opts->tile. */
-    (void)n; (void)A; (void)B; (void)C; (void)opts;
+    const int tile = opts->tile;
+    for (int ii = 0; ii < n; ii += tile) {
+        const int imax = (ii + tile < n) ? ii + tile : n;
+        for (int kk = 0; kk < n; kk += tile) {
+            const int kmax = (kk + tile < n) ? kk + tile : n;
+            for (int jj = 0; jj < n; jj += tile) {
+                const int jmax = (jj + tile < n) ? jj + tile : n;
+                for (int i = ii; i < imax; i++) {
+                    const float * restrict Ai = A + (size_t)i * n;
+                    float * restrict Ci = C + (size_t)i * n;
+                    for (int k = kk; k < kmax; k++) {
+                        const float a = Ai[k];
+                        const float * restrict Bk = B + (size_t)k * n;
+                        for (int j = jj; j < jmax; j++) {
+                            Ci[j] += a * Bk[j];
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+

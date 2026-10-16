@@ -55,11 +55,25 @@ int gemm_mpi_setup(const summa_grid * g, const gemm_opts * opts,
     c->grid = *g;
     c->opts = *opts;
 
-    /* TODO: split `comm` into row and column communicators (MPI_Comm_split
-     * with g->row / g->col as the colour, or MPI_Cart_create + MPI_Cart_sub),
-     * and allocate the two b x b receive buffers. Nothing after this point
-     * should allocate. */
-    (void)comm;
+    /* Split comm into row communicator (key=col) and column communicator (key=row). */
+    int rc1 = MPI_Comm_split(comm, g->row, g->col, &c->row_comm);
+    int rc2 = MPI_Comm_split(comm, g->col, g->row, &c->col_comm);
+    if (rc1 != MPI_SUCCESS || rc2 != MPI_SUCCESS) {
+        free(c);
+        return 1;
+    }
+
+    /* Allocate 64-byte aligned b x b buffers for panel reception. */
+    size_t b_bytes = (size_t)g->b * g->b * sizeof(float);
+    if (posix_memalign((void**)&c->A_buf, 64, b_bytes) != 0 ||
+        posix_memalign((void**)&c->B_buf, 64, b_bytes) != 0) {
+        if (c->A_buf) free(c->A_buf);
+        if (c->B_buf) free(c->B_buf);
+        MPI_Comm_free(&c->row_comm);
+        MPI_Comm_free(&c->col_comm);
+        free(c);
+        return 1;
+    }
 
     *ctx = c;
     return 0;
@@ -69,16 +83,51 @@ int gemm_mpi_setup(const summa_grid * g, const gemm_opts * opts,
 void gemm_mpi(void * ctx, const float * A_ij, const float * B_ij, float * C_ij,
               MPI_Comm comm)
 {
+    (void)comm;
     summa_ctx * c = (summa_ctx*)ctx;
-    memset(&c->stats, 0, sizeof c->stats);
+    memset(&c->stats, 0, sizeof(c->stats));
 
-    /* TODO: the p steps. At step k, the A panel comes from grid column k of my
-     * row and the B panel from grid row k of my column; when that is me, the
-     * panel is my own block. Wrap the communication in MPI_Wtime() and add it
-     * to c->stats.comm_seconds; count the messages and bytes this rank SENDS
-     * under the model your report states. Then gemm() the two panels into
-     * C_ij. */
-    (void)A_ij; (void)B_ij; (void)C_ij; (void)comm;
+    const int p = c->grid.p;
+    const int b = c->grid.b;
+    const int my_row = c->grid.row;
+    const int my_col = c->grid.col;
+    const int count = b * b;
+    const long long bytes_per_panel = (long long)count * sizeof(float);
+
+    for (int k = 0; k < p; k++) {
+        const float * a_panel = NULL;
+        const float * b_panel = NULL;
+
+        double t0 = MPI_Wtime();
+
+        /* Broadcast A_ik along row communicator. Root is rank with col == k. */
+        if (my_col == k) {
+            MPI_Bcast((void*)A_ij, count, MPI_FLOAT, k, c->row_comm);
+            a_panel = A_ij;
+            c->stats.messages += (p - 1);
+            c->stats.bytes_sent += (p - 1) * bytes_per_panel;
+        } else {
+            MPI_Bcast(c->A_buf, count, MPI_FLOAT, k, c->row_comm);
+            a_panel = c->A_buf;
+        }
+
+        /* Broadcast B_kj along column communicator. Root is rank with row == k. */
+        if (my_row == k) {
+            MPI_Bcast((void*)B_ij, count, MPI_FLOAT, k, c->col_comm);
+            b_panel = B_ij;
+            c->stats.messages += (p - 1);
+            c->stats.bytes_sent += (p - 1) * bytes_per_panel;
+        } else {
+            MPI_Bcast(c->B_buf, count, MPI_FLOAT, k, c->col_comm);
+            b_panel = c->B_buf;
+        }
+
+        double t1 = MPI_Wtime();
+        c->stats.comm_seconds += (t1 - t0);
+
+        /* Local GEMM accumulation: C_ij += A_ik * B_kj */
+        gemm(b, a_panel, b_panel, C_ij, &c->opts);
+    }
 }
 
 
@@ -93,6 +142,9 @@ void gemm_mpi_teardown(void * ctx)
 {
     summa_ctx * c = (summa_ctx*)ctx;
     if (!c) return;
-    /* TODO: MPI_Comm_free the two communicators, free the two buffers. */
+    if (c->row_comm != MPI_COMM_NULL) MPI_Comm_free(&c->row_comm);
+    if (c->col_comm != MPI_COMM_NULL) MPI_Comm_free(&c->col_comm);
+    if (c->A_buf) free(c->A_buf);
+    if (c->B_buf) free(c->B_buf);
     free(c);
 }

@@ -1,0 +1,14 @@
+
+ Performance counter stats for './gemm_tiled --n=512 --tile=64 --iters=1 --no-check':
+
+         263912309      cycles:u                                                              
+         642082056      instructions:u                   #    2.43  insn per cycle            
+            835406      cache-misses:u                   #    9.20% of all cache refs         
+           9079260      cache-references:u                                                    
+
+       0.078027192 seconds time elapsed
+
+       0.069576000 seconds user
+       0.000000000 seconds sys
+
+

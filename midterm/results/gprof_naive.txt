@@ -1,0 +1,45 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.00      0.51     0.51        2   255.00   255.00  gemm
+  0.00      0.51     0.00        4     0.00     0.00  get_arg
+  0.00      0.51     0.00        4     0.00     0.00  get_argval_int
+  0.00      0.51     0.00        3     0.00     0.00  alloc_matrix
+  0.00      0.51     0.00        2     0.00     0.00  rel_error
+
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) for 1.96% of 0.51 seconds
+
+index % time    self  children    called     name
+                0.51    0.00       2/2           main [2]
+[1]    100.0    0.51    0.00       2         gemm [1]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]    100.0    0.00    0.51                 main [2]
+                0.51    0.00       2/2           gemm [1]
+                0.00    0.00       4/4           get_arg [3]
+                0.00    0.00       4/4           get_argval_int [4]
+                0.00    0.00       3/3           alloc_matrix [5]
+                0.00    0.00       2/2           rel_error [6]
+-----------------------------------------------
+                0.00    0.00       4/4           main [2]
+[3]      0.0    0.00    0.00       4         get_arg [3]
+-----------------------------------------------
+                0.00    0.00       4/4           main [2]
+[4]      0.0    0.00    0.00       4         get_argval_int [4]
+-----------------------------------------------
+                0.00    0.00       3/3           main [2]
+[5]      0.0    0.00    0.00       3         alloc_matrix [5]
+-----------------------------------------------
+                0.00    0.00       2/2           main [2]
+[6]      0.0    0.00    0.00       2         rel_error [6]
+-----------------------------------------------
+
+Index by function name
+
+   [5] alloc_matrix (input.h)  [3] get_arg (main_gemm.c)   [6] rel_error (reference.h)
+   [1] gemm                    [4] get_argval_int (main_gemm.c)
