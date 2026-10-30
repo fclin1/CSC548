@@ -33,10 +33,11 @@ if [ ! -d "matrices" ] || [ ! -f "matrices/bfly.mtx" ]; then
     exit 1
 fi
 
-# 3. Build all kernels for Tesla V100 (sm_70)
-echo "Building all kernels with GPU_ARCH=sm_70..."
+
+# 3. Build all kernels (sm_120)
+echo "Building all kernels with GPU_ARCH=sm_120..."
 make clean
-make all GPU_ARCH=sm_70
+make all GPU_ARCH=sm_120
 
 # 4. Run CPU and GPU benchmarks (generates all results)
 echo "Executing benchmarks..."

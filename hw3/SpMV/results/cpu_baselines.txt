@@ -3,34 +3,34 @@ Reading sparse matrix from file (matrices/D6-6.mtx): done
 file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880
 storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
 	Performing 800 iterations
-	benchmarking CSR-SpMV:   0.6577 ms (  0.45 GFLOP/s   4.1 GB/s)
+	benchmarking CSR-SpMV:   0.1358 ms (  2.16 GFLOP/s  20.1 GB/s)
 Reading sparse matrix from file (matrices/dictionary28.mtx): done
 
 file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076
 storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
 	Performing 800 iterations
-	benchmarking CSR-SpMV:   0.6409 ms (  0.56 GFLOP/s   4.0 GB/s)
+	benchmarking CSR-SpMV:   0.4535 ms (  0.79 GFLOP/s   5.6 GB/s)
 Reading sparse matrix from file (matrices/bfly.mtx): done
 
 file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608
 storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
 	Performing 800 iterations
-	benchmarking CSR-SpMV:   0.2724 ms (  1.44 GFLOP/s  10.1 GB/s)
+	benchmarking CSR-SpMV:   0.1077 ms (  3.65 GFLOP/s  25.6 GB/s)
 Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
 
 file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947
 storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
-	Performing 421 iterations
-	benchmarking CSR-SpMV:   6.6743 ms (  1.79 GFLOP/s  10.8 GB/s)
+	Performing 800 iterations
+	benchmarking CSR-SpMV:   2.5664 ms (  4.65 GFLOP/s  28.1 GB/s)
 Reading sparse matrix from file (matrices/pkustk14.mtx): done
 
 file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504
 storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
-	Performing 195 iterations
-	benchmarking CSR-SpMV:  15.5950 ms (  1.90 GFLOP/s  11.5 GB/s)
+	Performing 542 iterations
+	benchmarking CSR-SpMV:   5.4905 ms (  5.40 GFLOP/s  32.6 GB/s)
 Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
 
 file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214
 storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
-	Performing 164 iterations
-	benchmarking CSR-SpMV:  14.4565 ms (  0.77 GFLOP/s   5.7 GB/s)
+	Performing 245 iterations
+	benchmarking CSR-SpMV:  10.1423 ms (  1.09 GFLOP/s   8.1 GB/s)

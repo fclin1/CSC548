@@ -114,35 +114,12 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 3. Python Virtual Environment Setup
-# ------------------------------------------------------------------------------
-echo ""
-echo "[Step 3/5] Setting up Python Virtual Environment (venv_arc)..."
-if [ ! -d "venv_arc" ]; then
-    echo "Creating virtual environment 'venv_arc' using python3..."
-    python3 -m venv venv_arc
-    echo "Installing required report packages (matplotlib, pandas, reportlab, numpy)..."
-    venv_arc/bin/pip install --no-cache-dir matplotlib pandas reportlab numpy
-    echo "Virtual environment successfully configured."
-else
-    echo "'venv_arc' already exists."
-    # Verify reportlab is installed
-    if ! venv_arc/bin/python3 -c "import reportlab" &> /dev/null; then
-        echo "Installing missing dependencies into venv_arc..."
-        venv_arc/bin/pip install --no-cache-dir matplotlib pandas reportlab numpy
-    fi
-fi
-
-# Quick test of venv
-venv_arc/bin/python3 -c "import matplotlib, pandas, reportlab, numpy; print('Python packages verified: OK')"
-
-# ------------------------------------------------------------------------------
 # 4. Compilation & Architecture Build
 # ------------------------------------------------------------------------------
 echo ""
-echo "[Step 4/5] Compiling CUDA Kernels for Volta sm_70..."
+echo "[Step 4/5] Compiling CUDA Kernels for Volta sm_120..."
 make clean
-make all GPU_ARCH=sm_70
+make all GPU_ARCH=sm_120
 echo "Build succeeded. Generated binaries:"
 ls -lh spmv spmv_csr spmv_cuda_scalar spmv_cuda_vector spmv_cuda_ell
 
