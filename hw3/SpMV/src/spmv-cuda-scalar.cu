@@ -72,8 +72,15 @@ __global__ void spmv_csr_scalar_kernel(int num_rows,
                                        float * __restrict__ y)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < num_rows)
-        y[i] = 0.0f;      /* placeholder: writes zeros, so the check FAILs */
+    if (i < num_rows) {
+        int start = row_ptr[i];
+        int end   = row_ptr[i + 1];
+        float sum = 0.0f;
+        for (int k = start; k < end; k++) {
+            sum += vals[k] * x[col_idx[k]];
+        }
+        y[i] = sum;
+    }
 }
 
 
@@ -95,10 +102,21 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
      * Note num_cols and num_rows differ on D6-6, which is rectangular. */
 
     /* TODO: work out the launch configuration for --block and record it. One
-     * thread per row here, so you need enough blocks to cover num_rows. */
-    c->stats.block_size      = opts->block_size;
-    c->stats.grid_size       = 0;
+    * thread per row here, so you need enough blocks to cover num_rows. */
+
+    CUDA_TRY(cudaMemcpy(c->d_row_ptr, A->row_ptr, (size_t)(A->num_rows + 1) * sizeof(int), cudaMemcpyHostToDevice));
+    CUDA_TRY(cudaMemcpy(c->d_col_idx, A->col_idx, (size_t)A->num_nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+    CUDA_TRY(cudaMemcpy(c->d_vals,    A->vals,    (size_t)A->num_nonzeros * sizeof(float), cudaMemcpyHostToDevice));
+
+    /* Launch configuration: one thread per row */
+    int block_size = opts->block_size;
+    int grid_size  = (A->num_rows + block_size - 1) / block_size;
+
+    c->stats.block_size      = block_size;
+    c->stats.grid_size       = grid_size;
     c->stats.threads_per_row = 1;
+    c->stats.max_row_len     = 0;
+    c->stats.ell_slots       = 0;
 
     *ctx = c;
     return 0;
@@ -108,22 +126,27 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
 extern "C" void spmv_cuda_h2d(void * ctx, const float * x)
 {
     /* TODO: copy num_cols floats from host x into ((spmv_ctx*)ctx)->d_x. */
-    (void)ctx; (void)x;
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(c->d_x, x, (size_t)c->num_cols * sizeof(float), cudaMemcpyHostToDevice);
 }
 
 
 extern "C" void spmv_cuda_kernel(void * ctx)
-{
+{  
     /* TODO: launch spmv_csr_scalar_kernel with your configuration, then
      * synchronize. Nothing else belongs here -- no allocation, no transfer. */
-    (void)ctx;
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    spmv_csr_scalar_kernel<<<c->stats.grid_size, c->stats.block_size>>>(
+        c->num_rows, c->d_row_ptr, c->d_col_idx, c->d_vals, c->d_x, c->d_y);
+    cudaDeviceSynchronize();
 }
 
 
 extern "C" void spmv_cuda_d2h(void * ctx, float * y)
-{
+{  
     /* TODO: copy num_rows floats from ((spmv_ctx*)ctx)->d_y back into host y. */
-    (void)ctx; (void)y;
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(y, c->d_y, (size_t)c->num_rows * sizeof(float), cudaMemcpyDeviceToHost);
 }
 
 
@@ -140,5 +163,10 @@ extern "C" void spmv_cuda_teardown(void * ctx)
     spmv_ctx * c = (spmv_ctx*)ctx;
     if (!c) return;
     /* TODO: cudaFree everything setup allocated. */
+    if (c->d_row_ptr) cudaFree(c->d_row_ptr);
+    if (c->d_col_idx) cudaFree(c->d_col_idx);
+    if (c->d_vals)    cudaFree(c->d_vals);
+    if (c->d_x)       cudaFree(c->d_x);
+    if (c->d_y)       cudaFree(c->d_y);
     free(c);
 }

@@ -21,6 +21,7 @@
 #include "spmv_cuda.h"
 
 #define WARP_SIZE 32
+#define FULL_MASK 0xffffffff
 
 #define CUDA_TRY(call)                                                        \
     do {                                                                      \
@@ -69,8 +70,25 @@ __global__ void spmv_csr_vector_kernel(int num_rows,
     int tid  = blockIdx.x * blockDim.x + threadIdx.x;
     int row  = tid / WARP_SIZE;
     int lane = threadIdx.x % WARP_SIZE;
-    if (row < num_rows && lane == 0)
-        y[row] = 0.0f;    /* placeholder: writes zeros, so the check FAILs */
+
+    if (row < num_rows) {
+        int start = row_ptr[row];
+        int end   = row_ptr[row + 1];
+        float sum = 0.0f;
+
+        for (int k = start + lane; k < end; k += WARP_SIZE) {
+            sum += vals[k] * x[col_idx[k]];
+        }
+
+        #pragma unroll
+        for (int offset = 16; offset > 0; offset /= 2) {
+            sum += __shfl_down_sync(FULL_MASK, sum, offset);
+        }
+
+        if (lane == 0) {
+            y[row] = sum;
+        }
+    }
 }
 
 
@@ -83,16 +101,31 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
     c->num_rows     = A->num_rows;
     c->num_cols     = A->num_cols;
     c->num_nonzeros = A->num_nonzeros;
-
     /* TODO: the same five device buffers and upload as in the scalar kernel. */
-
+    CUDA_TRY(cudaMalloc((void**)&c->d_row_ptr, (size_t)(A->num_rows + 1) * sizeof(int)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_col_idx, (size_t)A->num_nonzeros * sizeof(int)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_vals,    (size_t)A->num_nonzeros * sizeof(float)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_x,       (size_t)A->num_cols * sizeof(float)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_y,       (size_t)A->num_rows * sizeof(float)));
     /* TODO: the launch configuration. Careful -- you now need one WARP per row,
      * not one thread, so the grid covers num_rows*WARP_SIZE threads. Getting
      * this wrong is the classic way to silently compute only the first
      * 1/32 of y. */
-    c->stats.block_size      = opts->block_size;
-    c->stats.grid_size       = 0;
+    CUDA_TRY(cudaMemcpy(c->d_row_ptr, A->row_ptr, (size_t)(A->num_rows + 1) * sizeof(int), cudaMemcpyHostToDevice));
+    CUDA_TRY(cudaMemcpy(c->d_col_idx, A->col_idx, (size_t)A->num_nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+    CUDA_TRY(cudaMemcpy(c->d_vals,    A->vals,    (size_t)A->num_nonzeros * sizeof(float), cudaMemcpyHostToDevice));
+
+    /* Launch configuration: one WARP per row.
+     * With block_size threads per block, there are (block_size / WARP_SIZE) warps per block. */
+    int block_size      = opts->block_size;
+    int warps_per_block = block_size / WARP_SIZE;
+    int grid_size       = (A->num_rows + warps_per_block - 1) / warps_per_block;
+
+    c->stats.block_size      = block_size;
+    c->stats.grid_size       = grid_size;
     c->stats.threads_per_row = WARP_SIZE;
+    c->stats.max_row_len     = 0;
+    c->stats.ell_slots       = 0;
 
     *ctx = c;
     return 0;
@@ -101,19 +134,25 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
 
 extern "C" void spmv_cuda_h2d(void * ctx, const float * x)
 {
-    (void)ctx; (void)x;    /* TODO */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(c->d_x, x, (size_t)c->num_cols * sizeof(float), cudaMemcpyHostToDevice);
 }
 
 
 extern "C" void spmv_cuda_kernel(void * ctx)
 {
-    (void)ctx;             /* TODO: launch, then synchronize */
+    /* TODO: launch, then synchronize */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    spmv_csr_vector_kernel<<<c->stats.grid_size, c->stats.block_size>>>(
+        c->num_rows, c->d_row_ptr, c->d_col_idx, c->d_vals, c->d_x, c->d_y);
+    cudaDeviceSynchronize();
 }
 
 
 extern "C" void spmv_cuda_d2h(void * ctx, float * y)
 {
-    (void)ctx; (void)y;    /* TODO */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(y, c->d_y, (size_t)c->num_rows * sizeof(float), cudaMemcpyDeviceToHost);
 }
 
 
@@ -129,5 +168,10 @@ extern "C" void spmv_cuda_teardown(void * ctx)
     spmv_ctx * c = (spmv_ctx*)ctx;
     if (!c) return;
     /* TODO: cudaFree everything setup allocated. */
+    if (c->d_row_ptr) cudaFree(c->d_row_ptr);
+    if (c->d_col_idx) cudaFree(c->d_col_idx);
+    if (c->d_vals)    cudaFree(c->d_vals);
+    if (c->d_x)       cudaFree(c->d_x);
+    if (c->d_y)       cudaFree(c->d_y);
     free(c);
 }

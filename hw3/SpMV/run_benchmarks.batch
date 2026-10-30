@@ -1,0 +1,88 @@
+#!/bin/bash
+# ==============================================================================
+# run_benchmarks.batch - SLURM Job Script for NC State ARC GPU Nodes
+# Course: CSC 548 Parallel Systems (HW3: SpMV on the GPU)
+# Target Architecture: NVIDIA Tesla V100 (sm_70)
+# ==============================================================================
+#SBATCH -J hw3_spmv
+#SBATCH -N 1
+#SBATCH -c 4
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH -t 00:30:00
+#SBATCH -o hw3_benchmarks.%j.out
+#SBATCH -e hw3_benchmarks.%j.err
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+echo "=========================================================="
+echo "Starting HW3 CUDA SpMV Benchmark Suite on $(hostname)"
+echo "Date: $(date)"
+echo "Working Directory: $SCRIPT_DIR"
+echo "=========================================================="
+
+# 1. Environment Modules
+if command -v module &> /dev/null; then
+    echo "Loading environment modules..."
+    module load cuda/11.8.0 2>/dev/null || module load cuda/12.2 2>/dev/null || module load cuda 2>/dev/null || true
+    module load gcc/10.2.0 2>/dev/null || module load gcc 2>/dev/null || true
+    module load python/3.10 2>/dev/null || module load python/3.8 2>/dev/null || module load python 2>/dev/null || true
+fi
+
+# 2. Setup / Matrix Check
+bash setup_arc.sh --check-only
+
+# 3. Hardware Recording
+mkdir -p results/plots
+echo "Recording hardware information..."
+lscpu > results/hardware_info.txt
+nvidia-smi >> results/hardware_info.txt
+
+# 4. Compilation for Tesla V100 (sm_70)
+echo "Building all kernels for Tesla V100 (GPU_ARCH=sm_70)..."
+make clean
+make all GPU_ARCH=sm_70
+
+# 5. Execute Benchmarks
+echo "Running full benchmark sweeps..."
+bash run_experiments.sh
+
+# 6. Generate Figures and Final PDF Report
+echo "Generating plots and compiling ReportLab PDF..."
+if [ -d "venv_arc" ]; then
+    PYTHON_CMD="venv_arc/bin/python3"
+elif [ -d "../../venv" ]; then
+    PYTHON_CMD="../../venv/bin/python3"
+else
+    PYTHON_CMD="python3"
+fi
+
+$PYTHON_CMD generate_plots.py
+$PYTHON_CMD build_report.py
+
+# 7. Package Deliverables
+echo "Updating HW3-fclin submission package..."
+mkdir -p ../HW3-fclin
+cp src/spmv-cuda-scalar.cu ../HW3-fclin/
+cp src/spmv-cuda-vector.cu ../HW3-fclin/
+cp src/spmv-cuda-ell.cu    ../HW3-fclin/
+cp Makefile                ../HW3-fclin/
+cp report.pdf              ../HW3-fclin/
+cp report.pdf              ../report.pdf
+
+cd ..
+rm -f HW3-fclin.zip
+zip -r HW3-fclin.zip HW3-fclin/
+cd "$SCRIPT_DIR"
+
+echo "=========================================================="
+echo "HW3 Benchmark Execution & Report Generation Completed!"
+echo "Generated outputs:"
+echo "  - Raw CSV data:       results/all_benchmarks_combined.csv"
+echo "  - Figures:            results/plots/ (5 PNGs, 300 DPI)"
+echo "  - PDF Report:         hw3/report.pdf and hw3/SpMV/report.pdf"
+echo "  - Submission Zip:     hw3/HW3-fclin.zip"
+echo "=========================================================="

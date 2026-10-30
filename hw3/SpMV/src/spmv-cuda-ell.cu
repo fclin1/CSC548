@@ -66,8 +66,14 @@ __global__ void spmv_ell_kernel(int num_rows, int max_row_len,
                                 float * __restrict__ y)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < num_rows)
-        y[i] = 0.0f;      /* placeholder: writes zeros, so the check FAILs */
+    if (i < num_rows) {
+        float sum = 0.0f;
+        for (int k = 0; k < max_row_len; k++) {
+            size_t idx = (size_t)k * (size_t)num_rows + (size_t)i;
+            sum += vals[idx] * x[col_idx[idx]];
+        }
+        y[i] = sum;
+    }
 }
 
 
@@ -89,18 +95,97 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
      * num_rows*K can be far larger than nnz -- on Ga3As3H12 it is 16x the CSR
      * size -- so check both the host allocation and the cudaMalloc, and return
      * nonzero rather than crashing. */
-    c->max_row_len = 0;
+    int K = csr_max_row_len(A);
+    c->max_row_len = K;
 
     /* TODO: launch configuration -- one thread per row, as in the scalar
      * kernel. */
-    c->stats.block_size      = opts->block_size;
-    c->stats.grid_size       = 0;
-    c->stats.threads_per_row = 1;
+    size_t slots = (size_t)A->num_rows * (size_t)K;
 
+    int   * h_col_idx = NULL;
+    float * h_vals    = NULL;
+
+    if (slots > 0) {
+        h_col_idx = (int*)calloc(slots, sizeof(int));
+        h_vals    = (float*)calloc(slots, sizeof(float));
+        if (!h_col_idx || !h_vals) {
+            free(h_col_idx);
+            free(h_vals);
+            free(c);
+            return 1;
+        }
+
+        int m = A->num_rows;
+        for (int i = 0; i < m; i++) {
+            int r_start = A->row_ptr[i];
+            int r_end   = A->row_ptr[i + 1];
+            int len     = r_end - r_start;
+            for (int k = 0; k < len; k++) {
+                size_t idx = (size_t)k * (size_t)m + (size_t)i;
+                h_col_idx[idx] = A->col_idx[r_start + k];
+                h_vals[idx]    = A->vals[r_start + k];
+            }
+        }
+    }
+
+    /* Allocate device buffers */
+    cudaError_t err;
+    if (slots > 0) {
+        err = cudaMalloc((void**)&c->d_col_idx, slots * sizeof(int));
+        if (err != cudaSuccess) {
+            free(h_col_idx); free(h_vals); free(c);
+            return 1;
+        }
+        err = cudaMalloc((void**)&c->d_vals, slots * sizeof(float));
+        if (err != cudaSuccess) {
+            cudaFree(c->d_col_idx);
+            free(h_col_idx); free(h_vals); free(c);
+            return 1;
+        }
+    }
+
+    err = cudaMalloc((void**)&c->d_x, (size_t)A->num_cols * sizeof(float));
+    if (err != cudaSuccess) {
+        if (slots > 0) { cudaFree(c->d_col_idx); cudaFree(c->d_vals); }
+        free(h_col_idx); free(h_vals); free(c);
+        return 1;
+    }
+
+    err = cudaMalloc((void**)&c->d_y, (size_t)A->num_rows * sizeof(float));
+    if (err != cudaSuccess) {
+        if (slots > 0) { cudaFree(c->d_col_idx); cudaFree(c->d_vals); }
+        cudaFree(c->d_x);
+        free(h_col_idx); free(h_vals); free(c);
+        return 1;
+    }
+
+    if (slots > 0) {
+        err = cudaMemcpy(c->d_col_idx, h_col_idx, slots * sizeof(int), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess) {
+            cudaFree(c->d_col_idx); cudaFree(c->d_vals); cudaFree(c->d_x); cudaFree(c->d_y);
+            free(h_col_idx); free(h_vals); free(c);
+            return 1;
+        }
+        err = cudaMemcpy(c->d_vals, h_vals, slots * sizeof(float), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess) {
+            cudaFree(c->d_col_idx); cudaFree(c->d_vals); cudaFree(c->d_x); cudaFree(c->d_y);
+            free(h_col_idx); free(h_vals); free(c);
+            return 1;
+        }
+        free(h_col_idx);
+        free(h_vals);
+    }
+
+    int block_size = opts->block_size;
+    int grid_size  = (A->num_rows + block_size - 1) / block_size;
+
+    c->stats.block_size      = block_size;
+    c->stats.grid_size       = grid_size;
+    c->stats.threads_per_row = 1;
     /* the harness checks max_row_len against the matrix, and uses the slot
      * count for the ELL storage and GB/s figures */
-    c->stats.max_row_len = c->max_row_len;
-    c->stats.ell_slots   = (long long)c->num_rows * (long long)c->max_row_len;
+    c->stats.max_row_len     = c->max_row_len;
+    c->stats.ell_slots       = (long long)c->num_rows * (long long)c->max_row_len;
 
     *ctx = c;
     return 0;
@@ -109,19 +194,24 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
 
 extern "C" void spmv_cuda_h2d(void * ctx, const float * x)
 {
-    (void)ctx; (void)x;    /* TODO */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(c->d_x, x, (size_t)c->num_cols * sizeof(float), cudaMemcpyHostToDevice);
 }
 
 
 extern "C" void spmv_cuda_kernel(void * ctx)
 {
-    (void)ctx;             /* TODO: launch, then synchronize */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    spmv_ell_kernel<<<c->stats.grid_size, c->stats.block_size>>>(
+        c->num_rows, c->max_row_len, c->d_col_idx, c->d_vals, c->d_x, c->d_y);
+    cudaDeviceSynchronize();
 }
 
 
 extern "C" void spmv_cuda_d2h(void * ctx, float * y)
 {
-    (void)ctx; (void)y;    /* TODO */
+    spmv_ctx * c = (spmv_ctx*)ctx;
+    cudaMemcpy(y, c->d_y, (size_t)c->num_rows * sizeof(float), cudaMemcpyDeviceToHost);
 }
 
 
@@ -136,6 +226,9 @@ extern "C" void spmv_cuda_teardown(void * ctx)
 {
     spmv_ctx * c = (spmv_ctx*)ctx;
     if (!c) return;
-    /* TODO: cudaFree everything setup allocated. */
+    if (c->d_col_idx) cudaFree(c->d_col_idx);
+    if (c->d_vals)    cudaFree(c->d_vals);
+    if (c->d_x)       cudaFree(c->d_x);
+    if (c->d_y)       cudaFree(c->d_y);
     free(c);
 }

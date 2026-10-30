@@ -1,0 +1,11 @@
+# Compiled SpMV binaries
+/SpMV/spmv
+/SpMV/spmv_csr
+/SpMV/spmv_cuda_scalar
+/SpMV/spmv_cuda_vector
+/SpMV/spmv_cuda_ell
+/SpMV/matrices
+__pycache__/
+*.o
+*.out
+*.err
