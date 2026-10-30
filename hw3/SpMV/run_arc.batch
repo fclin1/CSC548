@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -J hw3_spmv
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH -c 4
+#SBATCH -t 00:20:00
+#SBATCH -o results_arc.out
+#SBATCH -e results_arc.err
+
+cd "$(dirname "$0")"
+bash run_arc.sh

@@ -12,6 +12,8 @@ import os
 import sys
 import re
 import io
+import shutil
+import zipfile
 import pandas as pd
 import numpy as np
 
@@ -803,6 +805,28 @@ def build_pdf():
     # Build PDF
     doc.build(story, canvasmaker=NumberedCanvas)
     print("Report generated successfully at:", OUTPUT_PDF)
+
+    # Sync copies and refresh submission zip
+    hw3_root = os.path.dirname(BASE_DIR)
+    root_pdf = os.path.join(hw3_root, "report.pdf")
+    pkg_dir = os.path.join(hw3_root, "HW3-fclin")
+    pkg_pdf = os.path.join(pkg_dir, "report.pdf")
+
+    try:
+        shutil.copy2(OUTPUT_PDF, root_pdf)
+        if os.path.exists(pkg_dir):
+            shutil.copy2(OUTPUT_PDF, pkg_pdf)
+
+            zip_path = os.path.join(hw3_root, "HW3-fclin.zip")
+            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+                for root_d, _, files in os.walk(pkg_dir):
+                    for f in files:
+                        full_p = os.path.join(root_d, f)
+                        rel_p = os.path.relpath(full_p, hw3_root)
+                        zf.write(full_p, rel_p)
+            print("Submission package updated:", zip_path)
+    except Exception as e:
+        print(f"Notice: Could not sync submission archive: {e}")
 
 if __name__ == "__main__":
     build_pdf()
