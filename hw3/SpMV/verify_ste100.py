@@ -62,6 +62,18 @@ if __name__ == "__main__":
             all_violations.extend(v)
         except:
             pass
+
+    md_report = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "report.md")
+    if os.path.exists(md_report):
+        with open(md_report, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        for line in lines:
+            line_str = line.strip()
+            # Skip tables, markdown headings, image links, math formulas
+            if not line_str or line_str.startswith('|') or line_str.startswith('#') or line_str.startswith('!') or line_str.startswith('$$'):
+                continue
+            v = check_text(line_str)
+            all_violations.extend(v)
             
     print(f"Total violations found: {len(all_violations)}")
     for v in all_violations:

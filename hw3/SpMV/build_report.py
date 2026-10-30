@@ -55,6 +55,7 @@ class NumberedCanvas(canvas.Canvas):
 
     def save(self):
         num_pages = len(self._saved_page_states)
+        print(f"Total report pages: {num_pages}")
         for state in self._saved_page_states:
             self.__dict__.update(state)
             self.draw_page_decorations(num_pages)
@@ -90,14 +91,46 @@ class NumberedCanvas(canvas.Canvas):
         
         self.restoreState()
 
-def is_v100_primary():
+def get_hardware_info():
     hw_file = os.path.join(RESULTS_DIR, "hardware_info.txt")
     if os.path.exists(hw_file):
         with open(hw_file, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
-            if "V100" in content or "Tesla" in content:
-                return True
-    return False
+            if "5060" in content:
+                return {
+                    'name': 'NVIDIA GeForce RTX 5060 Ti',
+                    'arch': 'Blackwell sm_120, 16 GB',
+                    'cpu': 'AMD EPYC 9115 (16-Core)',
+                    'peak_bw': 448.0,
+                    'peak_flops': 28000.0,
+                    'is_arc': True,
+                    'ref_bw': 900.0,
+                    'ref_name': 'V100 Equiv BW %'
+                }
+            elif "V100" in content or "Tesla" in content:
+                return {
+                    'name': 'NVIDIA Tesla V100 SXM2',
+                    'arch': 'Volta sm_70, 16 GB',
+                    'cpu': 'Intel Xeon Gold (ARC Node)',
+                    'peak_bw': 900.0,
+                    'peak_flops': 14100.0,
+                    'is_arc': True,
+                    'ref_bw': 484.0,
+                    'ref_name': '1080 Ti BW %'
+                }
+    return {
+        'name': 'NVIDIA GeForce GTX 1080 Ti',
+        'arch': 'Pascal sm_61, 11 GB',
+        'cpu': 'Intel Core i5-9600K',
+        'peak_bw': 484.0,
+        'peak_flops': 11340.0,
+        'is_arc': False,
+        'ref_bw': 900.0,
+        'ref_name': 'V100 Equiv BW %'
+    }
+
+def is_v100_primary():
+    return get_hardware_info()['is_arc']
 
 def matrix_shortname(path):
     if not isinstance(path, str):
@@ -214,12 +247,9 @@ def build_pdf():
     story.append(Paragraph("CSC 548: SpMV on the GPU with CUDA", title_style))
     story.append(Paragraph("Comparative Analysis: CSR Scalar, CSR Vector, and Column-Major ELLPACK", subtitle_style))
     story.append(Paragraph("<b>Unity ID:</b> fclin &nbsp;|&nbsp; <b>Course:</b> CSC 548 Parallel Systems &nbsp;|&nbsp; <b>Institution:</b> North Carolina State University", meta_style))
-    if is_v100_primary():
-        story.append(Paragraph("<b>Primary Hardware:</b> NC State ARC GPU Node (NVIDIA Tesla V100 SXM2/PCIe, Volta sm_70, 5120 cores, 900 GB/s peak bandwidth, 14.1 TFLOP/s FP32).", meta_style))
-        story.append(Paragraph("<b>Secondary Reference:</b> NVIDIA GeForce GTX 1080 Ti (Pascal sm_61, 3584 cores, 484 GB/s peak bandwidth, 11.3 TFLOP/s FP32).", meta_style))
-    else:
-        story.append(Paragraph("<b>Primary Hardware:</b> NVIDIA GeForce GTX 1080 Ti (Pascal sm_61, 3584 cores, 484 GB/s peak bandwidth, 11.3 TFLOP/s FP32).", meta_style))
-        story.append(Paragraph("<b>Reference Platform:</b> NC State ARC GPU Node (Tesla V100 SXM2, 5120 cores, 900 GB/s peak bandwidth, 14.1 TFLOP/s FP32).", meta_style))
+    hw = get_hardware_info()
+    story.append(Paragraph(f"<b>Primary Hardware:</b> ARC GPU Node ({hw['name']}, {hw['arch']}, {hw['cpu']}).", meta_style))
+    story.append(Paragraph("<b>Course Reference:</b> NC State ARC GPU Node (Tesla V100 SXM2, Volta sm_70, 900 GB/s peak, 14.1 TFLOP/s).", meta_style))
     story.append(HRFlowable(width="100%", thickness=1.2, color=PRIMARY, spaceBefore=1, spaceAfter=5))
 
     # Load data
@@ -548,7 +578,7 @@ def build_pdf():
     # Per-matrix rationale
     story.append(Paragraph("<b>Per-Matrix Analysis and Winning Kernel Rationale:</b>", h2_style))
     story.append(Paragraph(
-        "• <b>bfly (Winner: Column-Major ELLPACK, 1.37\u00d7 faster than scalar):</b> "
+        "• <b>bfly (Winner: Column-Major ELLPACK, 1.02\u00d7 faster than scalar):</b> "
         "Every row contains exactly 4 elements. "
         "ELL incurs 0.0% zero padding. "
         "The layout achieves 100% coalesced 128-byte reads across rows. "
@@ -556,40 +586,40 @@ def build_pdf():
         bullet_style
     ))
     story.append(Paragraph(
-        "• <b>D6-6 (Winner: CSR Scalar, 1.28\u00d7 faster than ELL):</b> "
+        "• <b>D6-6 (Winner: CSR Scalar, 1.12\u00d7 faster than ELL):</b> "
         "The average row length is only 1.2 elements. "
         "Although maximum row length K is 6, ELL wastes 79.7% of slots as padding zeros. "
         "CSR scalar accesses compact memory without padding penalties.",
         bullet_style
     ))
     story.append(Paragraph(
-        "• <b>dictionary28 (Winner: CSR Scalar, 1.42\u00d7 faster than vector):</b> "
-        "The matrix contains sparse language features (\u03bc = 3.4, K = 38). "
+        "• <b>dictionary28 (Winner: CSR Scalar, 1.56\u00d7 faster than ELL):</b> "
+        "The matrix contains sparse language features with average row length 3.4. "
         "ELL inflates memory by 9.79\u00d7 with 91.1% zero padding. "
         "CSR vector wastes 32 lanes on rows with only 3 nonzeros. "
         "CSR scalar executes compactly with minimal warp divergence.",
         bullet_style
     ))
     story.append(Paragraph(
-        "• <b>pkustk14 (Winner: CSR Vector, 2.99\u00d7 faster than scalar):</b> "
-        "Rows are dense (\u03bc = 97.7, K = 333). "
+        "• <b>pkustk14 (Winner: CSR Vector, 2.27\u00d7 faster than scalar):</b> "
+        "Rows are dense with average row length 97.7. "
         "Warp lanes stream consecutive elements with coalesced memory transactions. "
         "The vector kernel avoids the 70.7% zero padding waste of ELL. "
-        "It achieves a high throughput of 321.0 GB/s on the GPU.",
+        "It achieves a high throughput of 604.4 GB/s on the GPU.",
         bullet_style
     ))
     story.append(Paragraph(
-        "• <b>roadNet-CA (Winner: CSR Scalar, 2.32\u00d7 faster than ELL, 4.58\u00d7 faster than vector):</b> "
-        "The California road network contains 1.97 million rows with \u03bc = 2.8 nonzeros. "
+        "• <b>roadNet-CA (Winner: CSR Scalar, 3.00\u00d7 faster than ELL, 8.49\u00d7 faster than vector):</b> "
+        "The California road network contains 1.97 million rows with average row length 2.8. "
         "CSR vector assigns 32 threads per row, leaving over 90% of threads idle. "
-        "CSR scalar executes short rows rapidly, outperforming vector by 4.58\u00d7.",
+        "CSR scalar executes short rows rapidly, outperforming vector by 8.49\u00d7.",
         bullet_style
     ))
     story.append(Paragraph(
-        "• <b>Ga3As3H12 (Winner: CSR Vector, 5.55\u00d7 faster than scalar, 18.6\u00d7 faster than ELL):</b> "
-        "Outlier orbital rows reach K = 1,622 nonzeros. "
+        "• <b>Ga3As3H12 (Winner: CSR Vector, 2.51\u00d7 faster than scalar, 17.06\u00d7 faster than ELL):</b> "
+        "Outlier orbital rows reach maximum row length 1,622 nonzeros. "
         "Scalar threads stall severely on unbalanced rows. "
-        "ELL inflates memory by 16.58\u00d7 to 796 MB (94% padding). "
+        "ELL inflates memory by 16.58\u00d7 to 796 MB with 94.0% padding. "
         "CSR vector distributes long rows across 32 threads, achieving peak throughput.",
         bullet_style
     ))
@@ -670,8 +700,8 @@ def build_pdf():
 
     story.append(make_callout(
         "PCIe bus transfers dominate end-to-end execution time for lone SpMV calls. "
-        "On roadNet-CA, PCIe transfer consumes 85.0% of runtime, reducing speedup from 41.3x to 6.2x. "
-        "Iterative linear solvers maintain vectors in device memory, realizing the full 30x to 41x speedup.",
+        "On roadNet-CA, PCIe transfer consumes 78.8% of runtime, reducing speedup from 62.3x to 13.2x. "
+        "Iterative linear solvers maintain vectors in device memory, realizing the full 16x to 62x speedup.",
         title="PCIE BOTTLENECK OBSERVATION", color_hex="#2B6CB0", bg_hex="#EBF8FF"
     ))
 
@@ -682,31 +712,24 @@ def build_pdf():
     story.append(Paragraph("6. Empirical GPU Roofline Analysis & Memory Bandwidth Bounds", h1_style))
     story.append(Paragraph(
         "The roofline model bounds maximum achievable performance based on arithmetic intensity and hardware limits. "
-        "For single-precision SpMV, each nonzero requires 2 floating-point operations (one multiply, one add). "
-        "Memory traffic includes loading column indices (4 bytes), matrix values (4 bytes), vector elements (4 bytes), and storing vector y (4 bytes amortized). "
+        "For single-precision SpMV, each nonzero requires 2 floating-point operations. "
+        "Memory traffic includes loading column indices, matrix values, vector elements, and storing vector y. "
         "This yields an arithmetic intensity of approximately 0.17 FLOP per byte.",
         body_style
     ))
-    v100_primary = is_v100_primary()
-    p_bw = 900.0 if v100_primary else 484.0
-    ref_bw = 484.0 if v100_primary else 900.0
+    hw = get_hardware_info()
+    p_bw = hw['peak_bw']
+    ref_bw = hw['ref_bw']
+    p_flops = hw['peak_flops']
+    p_knee = hw['peak_flops'] / hw['peak_bw']
 
-    if v100_primary:
-        story.append(Paragraph(
-            "On the primary Tesla V100 GPU, peak memory bandwidth is 900 GB/s and peak FP32 compute is 14,100 GFLOP/s. "
-            "The roofline knee occurs at AI = 14,100 / 900 = 15.7 FLOP per byte. "
-            "On the reference GTX 1080 Ti, peak memory bandwidth is 484 GB/s and peak compute is 11,340 GFLOP/s with knee at 23.4 FLOP per byte. "
-            "Because AI = 0.17 is much lower than the knee, GPU SpMV resides entirely within the memory-bound regime.",
-            body_style
-        ))
-    else:
-        story.append(Paragraph(
-            "On the NVIDIA GTX 1080 Ti, peak memory bandwidth is 484 GB/s and peak FP32 compute is 11,340 GFLOP/s. "
-            "The roofline knee occurs at AI = 11,340 / 484 = 23.4 FLOP per byte. "
-            "On the reference Tesla V100 GPU, peak memory bandwidth is 900 GB/s and peak compute is 14,100 GFLOP/s, placing the knee at 15.7 FLOP per byte. "
-            "Because AI = 0.17 is much lower than 23.4 FLOP per byte, GPU SpMV resides entirely within the memory-bound regime.",
-            body_style
-        ))
+    story.append(Paragraph(
+        f"On the measured ARC GPU, peak DRAM bandwidth is {p_bw:.0f} GB/s and peak FP32 compute is {p_flops:,.0f} GFLOP/s. "
+        f"The roofline knee occurs at AI = {p_flops:.0f} / {p_bw:.0f} = {p_knee:.1f} FLOP per byte. "
+        "On the reference Tesla V100 GPU, peak memory bandwidth is 900 GB/s and peak compute is 14,100 GFLOP/s with knee at 15.7 FLOP per byte. "
+        "Because AI = 0.17 is much lower than the knee, GPU SpMV resides entirely within the memory-bound regime.",
+        body_style
+    ))
 
     # Fig 5
     fig5_path = os.path.join(PLOTS_DIR, "fig5_gpu_roofline.png")
@@ -715,10 +738,7 @@ def build_pdf():
         story.append(Paragraph("Figure 5: Empirical GPU roofline model showing memory bandwidth saturation across kernels.", caption_style))
 
     # Table 5: Roofline metrics
-    if v100_primary:
-        t5_headers = ["Matrix", "Kernel", "AI (FLOP/B)", "GFLOP/s", "Achieved BW", "V100 BW %", "1080 Ti Equiv BW %"]
-    else:
-        t5_headers = ["Matrix", "Kernel", "AI (FLOP/B)", "GFLOP/s", "Achieved BW", "1080 Ti BW %", "V100 Equiv BW %"]
+    t5_headers = ["Matrix", "Kernel", "AI (FLOP/B)", "GFLOP/s", "Achieved BW", "DRAM BW %", hw['ref_name']]
     t5_rows = [[Paragraph(f"<b>{h}</b>", th_style) for h in t5_headers]]
 
     roof_data = []
@@ -783,24 +803,14 @@ def build_pdf():
     story.append(table5)
     story.append(Paragraph("Table 5: Empirical roofline operational intensity and bandwidth utilization efficiency metrics.", caption_style))
 
-    if v100_primary:
-        story.append(Paragraph(
-            "<b>Roofline Conclusion:</b> "
-            "High memory throughput confirms that thread scheduling, warp shuffle reduction, and coalescing keep GPU memory controllers saturated. "
-            "On Ga3As3H12, the scalar kernel achieves low throughput due to severe warp stall penalties. "
-            "The CSR vector kernel effectively amortizes row-length variance and maximizes achievable memory bandwidth. "
-            "SpMV execution remains strictly memory-bound across all configurations.",
-            body_style
-        ))
-    else:
-        story.append(Paragraph(
-            "<b>Roofline Conclusion:</b> "
-            "The CSR vector kernel on pkustk14 reaches 321.0 GB/s, representing 66.3% of theoretical peak bandwidth on the GTX 1080 Ti. "
-            "This high efficiency confirms that thread scheduling, warp shuffle reduction, and coalescing keep memory controllers fully saturated. "
-            "On Ga3As3H12, the scalar kernel achieves only 48.1 GB/s due to severe warp stall penalties. "
-            "SpMV execution remains strictly memory-bound across all configurations.",
-            body_style
-        ))
+    story.append(Paragraph(
+        "<b>Roofline Conclusion:</b> "
+        "The CSR vector kernel on pkustk14 reaches 604.4 GB/s effective throughput, heavily utilizing the high-speed L2 cache. "
+        "This high efficiency confirms that thread scheduling, warp shuffle reduction, and coalescing keep memory controllers fully saturated. "
+        "On Ga3As3H12, the scalar kernel achieves only 231.7 GB/s due to severe warp stall penalties. "
+        "SpMV execution remains strictly memory-bound across all configurations.",
+        body_style
+    ))
 
     # Build PDF
     doc.build(story, canvasmaker=NumberedCanvas)

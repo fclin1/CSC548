@@ -31,14 +31,40 @@ RESULTS_DIR = os.path.join(BASE_DIR, "results")
 PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
-def is_v100_primary():
+def get_hardware_info():
     hw_file = os.path.join(RESULTS_DIR, "hardware_info.txt")
     if os.path.exists(hw_file):
         with open(hw_file, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
-            if "V100" in content or "Tesla" in content:
-                return True
-    return False
+            if "5060" in content:
+                return {
+                    'name': 'RTX 5060 Ti',
+                    'label': 'ARC RTX 5060 Ti (448 GB/s, 28.0 TFLOP/s)',
+                    'peak_bw': 448.0,
+                    'peak_flops': 28000.0,
+                    'knee': 28000.0 / 448.0,
+                    'is_arc': True
+                }
+            elif "V100" in content or "Tesla" in content:
+                return {
+                    'name': 'Tesla V100',
+                    'label': 'Tesla V100 (900 GB/s, 14.1 TFLOP/s)',
+                    'peak_bw': 900.0,
+                    'peak_flops': 14100.0,
+                    'knee': 14100.0 / 900.0,
+                    'is_arc': True
+                }
+    return {
+        'name': 'GTX 1080 Ti',
+        'label': 'GTX 1080 Ti (484 GB/s, 11.3 TFLOP/s)',
+        'peak_bw': 484.0,
+        'peak_flops': 11340.0,
+        'knee': 11340.0 / 484.0,
+        'is_arc': False
+    }
+
+def is_v100_primary():
+    return get_hardware_info()['is_arc']
 
 def matrix_shortname(path):
     if not isinstance(path, str):
@@ -357,44 +383,26 @@ def plot_figure_5_roofline():
     df['mat_name'] = df['matrix'].apply(matrix_shortname)
     df_256 = df[df['block'] == 256].copy()
 
-    # Hardware Specs:
-    # 1. Measured System: NVIDIA GeForce GTX 1080 Ti: Peak BW = 484 GB/s, Peak FP32 = 11,340 GFLOP/s
-    # 2. Reference System: ARC NVIDIA Tesla V100: Peak BW = 900 GB/s, Peak FP32 = 14,100 GFLOP/s
-    peak_bw_1080ti = 484.0
-    peak_flops_1080ti = 11340.0
-
-    peak_bw_v100 = 900.0
-    peak_flops_v100 = 14100.0
-
+    hw = get_hardware_info()
     fig, ax = plt.subplots(figsize=(11, 6.5))
-
     ai_range = np.logspace(-2, 3, 500)
     
-    # Roofline definitions
-    roof_bw_1080 = ai_range * peak_bw_1080ti
-    roof_1080 = np.minimum(roof_bw_1080, peak_flops_1080ti)
+    # Primary measured roofline
+    roof_bw = ai_range * hw['peak_bw']
+    roof_curve = np.minimum(roof_bw, hw['peak_flops'])
+    ax.plot(ai_range, roof_curve, color='#2B6CB0', linewidth=2.5, label=f"{hw['label']}")
 
+    # Course baseline roofline (Tesla V100)
+    peak_bw_v100 = 900.0
+    peak_flops_v100 = 14100.0
     roof_bw_v100 = ai_range * peak_bw_v100
     roof_v100 = np.minimum(roof_bw_v100, peak_flops_v100)
+    if hw['name'] != 'Tesla V100':
+        ax.plot(ai_range, roof_v100, color='#718096', linewidth=2, linestyle='--', label='Tesla V100 Course Baseline (900 GB/s, 14.1 TFLOP/s)')
 
-    knee_1080 = peak_flops_1080ti / peak_bw_1080ti
-    knee_v100 = peak_flops_v100 / peak_bw_v100
-
-    v100_primary = is_v100_primary()
-    if v100_primary:
-        # V100 is primary measured system
-        ax.plot(ai_range, roof_v100, color='#2B6CB0', linewidth=2.5, label='Tesla V100 Roofline (900 GB/s, 14.1 TFLOP/s)')
-        ax.plot(ai_range, roof_1080, color='#718096', linewidth=2, linestyle='--', label='GTX 1080 Ti Roofline (484 GB/s, 11.3 TFLOP/s)')
-        active_knee = knee_v100
-        ax.axvline(knee_v100, color='#2B6CB0', linestyle=':', alpha=0.6)
-        ax.text(knee_v100*1.1, 15, f'Knee = {knee_v100:.1f} FLOP/B', color='#2B6CB0', fontsize=8.5, fontweight='bold')
-    else:
-        # 1080 Ti is primary measured system
-        ax.plot(ai_range, roof_1080, color='#2B6CB0', linewidth=2.5, label='GTX 1080 Ti Roofline (484 GB/s, 11.3 TFLOP/s)')
-        ax.plot(ai_range, roof_v100, color='#718096', linewidth=2, linestyle='--', label='Tesla V100 Roofline (900 GB/s, 14.1 TFLOP/s)')
-        active_knee = knee_1080
-        ax.axvline(knee_1080, color='#2B6CB0', linestyle=':', alpha=0.6)
-        ax.text(knee_1080*1.1, 15, f'Knee = {knee_1080:.1f} FLOP/B', color='#2B6CB0', fontsize=8.5, fontweight='bold')
+    active_knee = hw['knee']
+    ax.axvline(active_knee, color='#2B6CB0', linestyle=':', alpha=0.6)
+    ax.text(active_knee*1.1, 15, f'Knee = {active_knee:.1f} FLOP/B', color='#2B6CB0', fontsize=8.5, fontweight='bold')
 
     # Plot empirical points
     kernel_styles = {
