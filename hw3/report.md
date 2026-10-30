@@ -4,7 +4,6 @@
 - **Course:** CSC 548 Parallel Systems (Fall 2026)
 - **Empirical Hardware:** ARC Node `c5` (NVIDIA GeForce RTX 5060 Ti, sm_120, 16 GB GDDR7, AMD EPYC 9115 16-Core CPU)
 - **Course Reference:** NC State ARC GPU Node (Tesla V100 SXM2, Volta sm_70, 900 GB/s peak, 14.1 TFLOP/s)
-- **Standard:** ASD-STE100 Simplified Technical English
 
 ---
 
