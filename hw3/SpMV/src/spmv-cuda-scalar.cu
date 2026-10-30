@@ -100,10 +100,13 @@ extern "C" int spmv_cuda_setup(const csr_matrix * A, const cuda_opts * opts,
      * Sizes: row_ptr num_rows+1 ints, col_idx and vals num_nonzeros each,
      * d_x num_cols floats, d_y num_rows floats. Wrap every call in CUDA_TRY.
      * Note num_cols and num_rows differ on D6-6, which is rectangular. */
+    CUDA_TRY(cudaMalloc((void**)&c->d_row_ptr, (size_t)(A->num_rows + 1) * sizeof(int)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_col_idx, (size_t)A->num_nonzeros * sizeof(int)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_vals,    (size_t)A->num_nonzeros * sizeof(float)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_x,       (size_t)A->num_cols * sizeof(float)));
+    CUDA_TRY(cudaMalloc((void**)&c->d_y,       (size_t)A->num_rows * sizeof(float)));
 
-    /* TODO: work out the launch configuration for --block and record it. One
-    * thread per row here, so you need enough blocks to cover num_rows. */
-
+    /* Upload matrix A arrays to device */
     CUDA_TRY(cudaMemcpy(c->d_row_ptr, A->row_ptr, (size_t)(A->num_rows + 1) * sizeof(int), cudaMemcpyHostToDevice));
     CUDA_TRY(cudaMemcpy(c->d_col_idx, A->col_idx, (size_t)A->num_nonzeros * sizeof(int), cudaMemcpyHostToDevice));
     CUDA_TRY(cudaMemcpy(c->d_vals,    A->vals,    (size_t)A->num_nonzeros * sizeof(float), cudaMemcpyHostToDevice));
