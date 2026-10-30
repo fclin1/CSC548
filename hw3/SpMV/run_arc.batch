@@ -9,3 +9,4 @@
 
 cd "$(dirname "$0")"
 bash run_arc.sh
+

@@ -47,3 +47,4 @@ echo "SUCCESS! Results generated in: hw3/SpMV/results/"
 echo "Files ready to pull:"
 ls -lh results/all_benchmarks_combined.csv results/cpu_baselines.txt results/hardware_info.txt
 echo "=========================================================="
+
