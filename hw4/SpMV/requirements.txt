@@ -1,0 +1,2 @@
+# Local teaching/test environment. Use the matching installation on ARC.
+pyspark==3.5.7
