@@ -20,8 +20,7 @@ from pathlib import Path
 
 def make_matrix_rdd(sc, entries, partitions):
     """Return an RDD of (row, col, val) with exactly partitions partitions."""
-    # TODO (Code 2): distribute A using the requested partition count.
-    raise NotImplementedError("implement make_matrix_rdd (Code 2)")
+    return sc.parallelize(entries, partitions)
 
 
 def spmv_join(a_rdd, x_rdd, partitions):
@@ -32,8 +31,12 @@ def spmv_join(a_rdd, x_rdd, partitions):
     aggregate contributions by row.
     Missing/empty rows may be omitted; the driver fills them with zero.
     """
-    # TODO (Code 1): plain column join followed by row reduction.
-    raise NotImplementedError("implement spmv_join (Code 1)")
+    return (
+        a_rdd.map(lambda rcv: (rcv[1], (rcv[0], rcv[2])))
+             .join(x_rdd, numPartitions=partitions)
+             .map(lambda kv: (kv[1][0][0], kv[1][0][1] * kv[1][1]))
+             .reduceByKey(lambda a, b: a + b, numPartitions=partitions)
+    )
 
 
 def spmv_broadcast(a_rdd, x_broadcast, partitions):
@@ -42,9 +45,10 @@ def spmv_broadcast(a_rdd, x_broadcast, partitions):
     Read x_broadcast.value inside the worker function, look up x[col],
     and aggregate products by row.
     """
-    # TODO (Code 2): broadcast lookup followed
-    # by row reduction. Co-partitioning may replace this path: see README.md.
-    raise NotImplementedError("implement spmv_broadcast (Code 1/2)")
+    return (
+        a_rdd.map(lambda rcv: (rcv[0], rcv[2] * x_broadcast.value[rcv[1]]))
+             .reduceByKey(lambda a, b: a + b, numPartitions=partitions)
+    )
 
 
 # ---- PROVIDED: reader, command line, broadcast creation, lineage printing, ----

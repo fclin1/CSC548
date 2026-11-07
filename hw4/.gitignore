@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.out
+*.err
+results/event-logs/
+results/event-logs-cores/
