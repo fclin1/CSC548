@@ -1,0 +1,88 @@
+26/11/08 17:20:00 INFO SparkContext: Running Spark version 3.5.0
+26/11/08 17:20:00 INFO SparkContext: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:20:00 INFO SparkContext: Java version 1.8.0_502
+26/11/08 17:20:00 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/08 17:20:00 INFO ResourceUtils: ==============================================================
+26/11/08 17:20:00 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/11/08 17:20:00 INFO ResourceUtils: ==============================================================
+26/11/08 17:20:00 INFO SparkContext: Submitted application: HW4-SpMV-join
+26/11/08 17:20:00 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/11/08 17:20:00 INFO ResourceProfile: Limiting resource is cpu
+26/11/08 17:20:00 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/11/08 17:20:00 INFO SecurityManager: Changing view acls to: fclin
+26/11/08 17:20:00 INFO SecurityManager: Changing modify acls to: fclin
+26/11/08 17:20:00 INFO SecurityManager: Changing view acls groups to: 
+26/11/08 17:20:00 INFO SecurityManager: Changing modify acls groups to: 
+26/11/08 17:20:00 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: fclin; groups with view permissions: EMPTY; users with modify permissions: fclin; groups with modify permissions: EMPTY
+26/11/08 17:20:00 INFO Utils: Successfully started service 'sparkDriver' on port 37255.
+26/11/08 17:20:01 INFO SparkEnv: Registering MapOutputTracker
+26/11/08 17:20:01 INFO SparkEnv: Registering BlockManagerMaster
+26/11/08 17:20:01 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/11/08 17:20:01 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/11/08 17:20:01 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/11/08 17:20:01 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-fc079922-e4b7-4e15-ba9f-99c74b582001
+26/11/08 17:20:01 INFO MemoryStore: MemoryStore started with capacity 8.4 GiB
+26/11/08 17:20:01 INFO SparkEnv: Registering OutputCommitCoordinator
+26/11/08 17:20:01 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/11/08 17:20:01 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/11/08 17:20:01 INFO Executor: Starting executor ID driver on host c26.localdomain
+26/11/08 17:20:01 INFO Executor: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:20:01 INFO Executor: Java version 1.8.0_502
+26/11/08 17:20:01 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/11/08 17:20:01 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@66a7562 for default.
+26/11/08 17:20:01 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 34829.
+26/11/08 17:20:01 INFO NettyBlockTransferService: Server created on c26.localdomain:34829
+26/11/08 17:20:01 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/11/08 17:20:01 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, c26.localdomain, 34829, None)
+26/11/08 17:20:01 INFO BlockManagerMasterEndpoint: Registering block manager c26.localdomain:34829 with 8.4 GiB RAM, BlockManagerId(driver, c26.localdomain, 34829, None)
+26/11/08 17:20:01 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, c26.localdomain, 34829, None)
+26/11/08 17:20:01 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, c26.localdomain, 34829, None)
+26/11/08 17:20:01 INFO SingleEventLogFileWriter: Logging events to file:/home/fclin/CSC548/hw4/SpMV/results/330206/event-logs/local-1794176401409.inprogress
+LINEAGE (join):
+(32) PythonRDD[15] at RDD at PythonRDD.scala:53 []
+ |   MapPartitionsRDD[14] at mapPartitions at PythonRDD.scala:160 []
+ |   ShuffledRDD[13] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(32) PairwiseRDD[12] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:38 []
+    |   PythonRDD[11] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:38 []
+    |   MapPartitionsRDD[10] at mapPartitions at PythonRDD.scala:160 []
+    |   ShuffledRDD[9] at partitionBy at NativeMethodAccessorImpl.java:0 []
+    +-(64) PairwiseRDD[8] at join at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:36 []
+       |   PythonRDD[7] at join at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:36 []
+       |   UnionRDD[6] at union at NativeMethodAccessorImpl.java:0 []
+       |   PythonRDD[4] at RDD at PythonRDD.scala:53 []
+       |   ParallelCollectionRDD[0] at readRDDFromFile at PythonRDD.scala:289 []
+       |       CachedPartitions: 32; MemorySize: 2.7 MiB; DiskSize: 0.0 B
+       |   PythonRDD[5] at RDD at PythonRDD.scala:53 []
+       |   ParallelCollectionRDD[2] at readRDDFromFile at PythonRDD.scala:289 []
+       |       CachedPartitions: 32; MemorySize: 606.0 KiB; DiskSize: 0.0 B
+{
+  "matrix": "matrices/bfly.mtx",
+  "rows": 49152,
+  "cols": 49152,
+  "nnz": 196608,
+  "scheme": "join",
+  "partitions": 32,
+  "a_partitions": 32,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 200.7748589385301,
+  "sequential_ms": 19.86304996535182,
+  "spark_start_ms": 1617.6500408910215,
+  "setup_ms": 3750.591847114265,
+  "mean_ms": 4250.554835004732,
+  "median_ms": 4238.5215209797025,
+  "min_ms": 4170.076119014993,
+  "check": "PASS",
+  "rel_l2": 9.494941767868714e-17,
+  "app_id": "local-1794176401409",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    4320.284012937918,
+    4331.6246890462935,
+    4192.2678330447525,
+    4238.5215209797025,
+    4170.076119014993
+  ]
+}

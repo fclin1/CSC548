@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/pkustk14.mtx",
+  "rows": 151926,
+  "cols": 151926,
+  "nnz": 14836504,
+  "scheme": "broadcast",
+  "partitions": 16,
+  "a_partitions": 16,
+  "master": "local[2]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 9994.489710079506,
+  "sequential_ms": 1445.6126410514116,
+  "spark_start_ms": 1035.5317778885365,
+  "setup_ms": 5383.716017007828,
+  "mean_ms": 6069.696529628709,
+  "median_ms": 6064.965809928253,
+  "min_ms": 6036.899913102388,
+  "check": "PASS",
+  "rel_l2": 3.3108457085274334e-18,
+  "app_id": "local-1794175870078",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    6089.292231015861,
+    6064.965809928253,
+    6105.21556599997,
+    6036.899913102388,
+    6052.109128097072
+  ]
+}

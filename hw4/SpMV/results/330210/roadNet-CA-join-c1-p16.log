@@ -1,0 +1,96 @@
+26/11/08 17:27:30 INFO SparkContext: Running Spark version 3.5.0
+26/11/08 17:27:30 INFO SparkContext: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:27:30 INFO SparkContext: Java version 1.8.0_462
+26/11/08 17:27:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/08 17:27:30 INFO ResourceUtils: ==============================================================
+26/11/08 17:27:30 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/11/08 17:27:30 INFO ResourceUtils: ==============================================================
+26/11/08 17:27:30 INFO SparkContext: Submitted application: HW4-SpMV-join
+26/11/08 17:27:30 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/11/08 17:27:30 INFO ResourceProfile: Limiting resource is cpu
+26/11/08 17:27:30 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/11/08 17:27:30 INFO SecurityManager: Changing view acls to: fclin
+26/11/08 17:27:30 INFO SecurityManager: Changing modify acls to: fclin
+26/11/08 17:27:30 INFO SecurityManager: Changing view acls groups to: 
+26/11/08 17:27:30 INFO SecurityManager: Changing modify acls groups to: 
+26/11/08 17:27:30 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: fclin; groups with view permissions: EMPTY; users with modify permissions: fclin; groups with modify permissions: EMPTY
+26/11/08 17:27:30 INFO Utils: Successfully started service 'sparkDriver' on port 40971.
+26/11/08 17:27:31 INFO SparkEnv: Registering MapOutputTracker
+26/11/08 17:27:31 INFO SparkEnv: Registering BlockManagerMaster
+26/11/08 17:27:31 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/11/08 17:27:31 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/11/08 17:27:31 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/11/08 17:27:31 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-cd66bc48-df0c-4140-9883-4979fb996107
+26/11/08 17:27:31 INFO MemoryStore: MemoryStore started with capacity 8.4 GiB
+26/11/08 17:27:31 INFO SparkEnv: Registering OutputCommitCoordinator
+26/11/08 17:27:31 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/11/08 17:27:31 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/11/08 17:27:31 INFO Executor: Starting executor ID driver on host c34.localdomain
+26/11/08 17:27:31 INFO Executor: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:27:31 INFO Executor: Java version 1.8.0_462
+26/11/08 17:27:31 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/11/08 17:27:31 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@76ba5c25 for default.
+26/11/08 17:27:31 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 34023.
+26/11/08 17:27:31 INFO NettyBlockTransferService: Server created on c34.localdomain:34023
+26/11/08 17:27:31 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/11/08 17:27:31 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, c34.localdomain, 34023, None)
+26/11/08 17:27:31 INFO BlockManagerMasterEndpoint: Registering block manager c34.localdomain:34023 with 8.4 GiB RAM, BlockManagerId(driver, c34.localdomain, 34023, None)
+26/11/08 17:27:31 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, c34.localdomain, 34023, None)
+26/11/08 17:27:31 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, c34.localdomain, 34023, None)
+26/11/08 17:27:31 INFO SingleEventLogFileWriter: Logging events to file:/home/fclin/CSC548/hw4/SpMV/results/330210/event-logs-cores/local-1794176851265.inprogress
+26/11/08 17:27:32 WARN TaskSetManager: Stage 0 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:27:35 WARN TaskSetManager: Stage 1 contains a task of very large size (1802 KiB). The maximum recommended task size is 1000 KiB.
+LINEAGE (join):
+(16) PythonRDD[15] at RDD at PythonRDD.scala:53 []
+ |   MapPartitionsRDD[14] at mapPartitions at PythonRDD.scala:160 []
+ |   ShuffledRDD[13] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(16) PairwiseRDD[12] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:38 []
+    |   PythonRDD[11] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:38 []
+    |   MapPartitionsRDD[10] at mapPartitions at PythonRDD.scala:160 []
+    |   ShuffledRDD[9] at partitionBy at NativeMethodAccessorImpl.java:0 []
+    +-(32) PairwiseRDD[8] at join at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:36 []
+       |   PythonRDD[7] at join at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:36 []
+       |   UnionRDD[6] at union at NativeMethodAccessorImpl.java:0 []
+       |   PythonRDD[4] at RDD at PythonRDD.scala:53 []
+       |   ParallelCollectionRDD[0] at readRDDFromFile at PythonRDD.scala:289 []
+       |       CachedPartitions: 16; MemorySize: 85.5 MiB; DiskSize: 0.0 B
+       |   PythonRDD[5] at RDD at PythonRDD.scala:53 []
+       |   ParallelCollectionRDD[2] at readRDDFromFile at PythonRDD.scala:289 []
+       |       CachedPartitions: 16; MemorySize: 24.7 MiB; DiskSize: 0.0 B
+26/11/08 17:27:37 WARN TaskSetManager: Stage 2 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:28:17 WARN TaskSetManager: Stage 5 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:28:58 WARN TaskSetManager: Stage 8 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:29:38 WARN TaskSetManager: Stage 11 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:30:19 WARN TaskSetManager: Stage 14 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:31:00 WARN TaskSetManager: Stage 17 contains a task of very large size (6369 KiB). The maximum recommended task size is 1000 KiB.
+{
+  "matrix": "matrices/roadNet-CA.mtx",
+  "rows": 1971281,
+  "cols": 1971281,
+  "nnz": 5533214,
+  "scheme": "join",
+  "partitions": 16,
+  "a_partitions": 16,
+  "master": "local[1]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 3541.7888769879937,
+  "sequential_ms": 445.16175892204046,
+  "spark_start_ms": 1048.784740967676,
+  "setup_ms": 5432.495909044519,
+  "mean_ms": 40216.084477631375,
+  "median_ms": 40229.73414300941,
+  "min_ms": 40036.26921004616,
+  "check": "PASS",
+  "rel_l2": 6.979969139476567e-17,
+  "app_id": "local-1794176851265",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    40229.73414300941,
+    40124.409328913316,
+    40036.26921004616,
+    40330.036723054945,
+    40359.97298313305
+  ]
+}

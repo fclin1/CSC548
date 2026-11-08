@@ -1,0 +1,86 @@
+26/11/08 17:20:35 INFO SparkContext: Running Spark version 3.5.0
+26/11/08 17:20:35 INFO SparkContext: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:20:35 INFO SparkContext: Java version 1.8.0_502
+26/11/08 17:20:35 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/08 17:20:35 INFO ResourceUtils: ==============================================================
+26/11/08 17:20:35 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/11/08 17:20:35 INFO ResourceUtils: ==============================================================
+26/11/08 17:20:35 INFO SparkContext: Submitted application: HW4-SpMV-broadcast
+26/11/08 17:20:35 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/11/08 17:20:35 INFO ResourceProfile: Limiting resource is cpu
+26/11/08 17:20:35 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/11/08 17:20:36 INFO SecurityManager: Changing view acls to: fclin
+26/11/08 17:20:36 INFO SecurityManager: Changing modify acls to: fclin
+26/11/08 17:20:36 INFO SecurityManager: Changing view acls groups to: 
+26/11/08 17:20:36 INFO SecurityManager: Changing modify acls groups to: 
+26/11/08 17:20:36 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: fclin; groups with view permissions: EMPTY; users with modify permissions: fclin; groups with modify permissions: EMPTY
+26/11/08 17:20:36 INFO Utils: Successfully started service 'sparkDriver' on port 33237.
+26/11/08 17:20:36 INFO SparkEnv: Registering MapOutputTracker
+26/11/08 17:20:36 INFO SparkEnv: Registering BlockManagerMaster
+26/11/08 17:20:36 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/11/08 17:20:36 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/11/08 17:20:36 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/11/08 17:20:36 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-7fd3aa6b-dd20-4ac3-a7ab-3f1971950191
+26/11/08 17:20:36 INFO MemoryStore: MemoryStore started with capacity 8.4 GiB
+26/11/08 17:20:36 INFO SparkEnv: Registering OutputCommitCoordinator
+26/11/08 17:20:36 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/11/08 17:20:36 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/11/08 17:20:36 INFO Executor: Starting executor ID driver on host c26.localdomain
+26/11/08 17:20:36 INFO Executor: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:20:36 INFO Executor: Java version 1.8.0_502
+26/11/08 17:20:36 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/11/08 17:20:36 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@66a7562 for default.
+26/11/08 17:20:36 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 33761.
+26/11/08 17:20:36 INFO NettyBlockTransferService: Server created on c26.localdomain:33761
+26/11/08 17:20:36 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/11/08 17:20:36 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, c26.localdomain, 33761, None)
+26/11/08 17:20:36 INFO BlockManagerMasterEndpoint: Registering block manager c26.localdomain:33761 with 8.4 GiB RAM, BlockManagerId(driver, c26.localdomain, 33761, None)
+26/11/08 17:20:36 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, c26.localdomain, 33761, None)
+26/11/08 17:20:36 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, c26.localdomain, 33761, None)
+26/11/08 17:20:37 INFO SingleEventLogFileWriter: Logging events to file:/home/fclin/CSC548/hw4/SpMV/results/330206/event-logs/local-1794176436763.inprogress
+26/11/08 17:20:38 WARN TaskSetManager: Stage 0 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+LINEAGE (broadcast):
+(1) PythonRDD[6] at RDD at PythonRDD.scala:53 []
+ |  MapPartitionsRDD[5] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[4] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(1) PairwiseRDD[3] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:50 []
+    |  PythonRDD[2] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:50 []
+    |  ParallelCollectionRDD[0] at readRDDFromFile at PythonRDD.scala:289 []
+    |      CachedPartitions: 1; MemorySize: 2.7 MiB; DiskSize: 0.0 B
+26/11/08 17:20:39 WARN TaskSetManager: Stage 1 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:20:39 WARN TaskSetManager: Stage 3 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:20:40 WARN TaskSetManager: Stage 5 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:20:41 WARN TaskSetManager: Stage 7 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:20:41 WARN TaskSetManager: Stage 9 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+26/11/08 17:20:42 WARN TaskSetManager: Stage 11 contains a task of very large size (3274 KiB). The maximum recommended task size is 1000 KiB.
+{
+  "matrix": "matrices/bfly.mtx",
+  "rows": 49152,
+  "cols": 49152,
+  "nnz": 196608,
+  "scheme": "broadcast",
+  "partitions": 1,
+  "a_partitions": 1,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 200.99543686956167,
+  "sequential_ms": 19.683288875967264,
+  "spark_start_ms": 1663.0793348886073,
+  "setup_ms": 1903.959022834897,
+  "mean_ms": 522.3422805778682,
+  "median_ms": 512.2753831092268,
+  "min_ms": 511.9569159578532,
+  "check": "PASS",
+  "rel_l2": 0.0,
+  "app_id": "local-1794176436763",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    538.0994440056384,
+    537.2432759031653,
+    512.2753831092268,
+    511.9569159578532,
+    512.1363839134574
+  ]
+}

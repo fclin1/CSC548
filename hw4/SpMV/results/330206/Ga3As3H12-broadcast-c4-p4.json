@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/Ga3As3H12.mtx",
+  "rows": 61349,
+  "cols": 61349,
+  "nnz": 5970947,
+  "scheme": "broadcast",
+  "partitions": 4,
+  "a_partitions": 4,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 8139.586176956072,
+  "sequential_ms": 965.9985839389265,
+  "spark_start_ms": 1909.1865639202297,
+  "setup_ms": 4371.121170930564,
+  "mean_ms": 1718.1452445685863,
+  "median_ms": 1733.8319439440966,
+  "min_ms": 1671.2049280758947,
+  "check": "PASS",
+  "rel_l2": 1.4654094964280696e-17,
+  "app_id": "local-1794176183250",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    1751.667644828558,
+    1733.8319439440966,
+    1671.2049280758947,
+    1740.5782949645072,
+    1693.4434110298753
+  ]
+}

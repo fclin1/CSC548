@@ -1,0 +1,79 @@
+26/11/08 17:07:35 INFO SparkContext: Running Spark version 3.5.0
+26/11/08 17:07:35 INFO SparkContext: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:07:35 INFO SparkContext: Java version 1.8.0_462
+26/11/08 17:07:35 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/08 17:07:35 INFO ResourceUtils: ==============================================================
+26/11/08 17:07:35 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/11/08 17:07:35 INFO ResourceUtils: ==============================================================
+26/11/08 17:07:35 INFO SparkContext: Submitted application: HW4-SpMV-broadcast
+26/11/08 17:07:35 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/11/08 17:07:35 INFO ResourceProfile: Limiting resource is cpu
+26/11/08 17:07:35 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/11/08 17:07:35 INFO SecurityManager: Changing view acls to: fclin
+26/11/08 17:07:35 INFO SecurityManager: Changing modify acls to: fclin
+26/11/08 17:07:35 INFO SecurityManager: Changing view acls groups to: 
+26/11/08 17:07:35 INFO SecurityManager: Changing modify acls groups to: 
+26/11/08 17:07:35 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: fclin; groups with view permissions: EMPTY; users with modify permissions: fclin; groups with modify permissions: EMPTY
+26/11/08 17:07:35 INFO Utils: Successfully started service 'sparkDriver' on port 44459.
+26/11/08 17:07:35 INFO SparkEnv: Registering MapOutputTracker
+26/11/08 17:07:35 INFO SparkEnv: Registering BlockManagerMaster
+26/11/08 17:07:35 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/11/08 17:07:35 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/11/08 17:07:35 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/11/08 17:07:35 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-8eab8c67-0c7e-41e5-b0ad-abb786fd7fbe
+26/11/08 17:07:35 INFO MemoryStore: MemoryStore started with capacity 8.4 GiB
+26/11/08 17:07:35 INFO SparkEnv: Registering OutputCommitCoordinator
+26/11/08 17:07:35 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/11/08 17:07:35 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/11/08 17:07:36 INFO Executor: Starting executor ID driver on host c34.localdomain
+26/11/08 17:07:36 INFO Executor: OS info Linux, 5.19.9-1.el8.elrepo.x86_64, amd64
+26/11/08 17:07:36 INFO Executor: Java version 1.8.0_462
+26/11/08 17:07:36 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/11/08 17:07:36 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@415a17b9 for default.
+26/11/08 17:07:36 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 41351.
+26/11/08 17:07:36 INFO NettyBlockTransferService: Server created on c34.localdomain:41351
+26/11/08 17:07:36 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/11/08 17:07:36 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, c34.localdomain, 41351, None)
+26/11/08 17:07:36 INFO BlockManagerMasterEndpoint: Registering block manager c34.localdomain:41351 with 8.4 GiB RAM, BlockManagerId(driver, c34.localdomain, 41351, None)
+26/11/08 17:07:36 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, c34.localdomain, 41351, None)
+26/11/08 17:07:36 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, c34.localdomain, 41351, None)
+26/11/08 17:07:36 INFO SingleEventLogFileWriter: Logging events to file:/home/fclin/CSC548/hw4/SpMV/results/330210/event-logs-cores/local-1794175656026.inprogress
+LINEAGE (broadcast):
+(16) PythonRDD[6] at RDD at PythonRDD.scala:53 []
+ |   MapPartitionsRDD[5] at mapPartitions at PythonRDD.scala:160 []
+ |   ShuffledRDD[4] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(16) PairwiseRDD[3] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:50 []
+    |   PythonRDD[2] at reduceByKey at /home/fclin/CSC548/hw4/SpMV/spmv-spark.py:50 []
+    |   ParallelCollectionRDD[0] at readRDDFromFile at PythonRDD.scala:289 []
+    |       CachedPartitions: 16; MemorySize: 2.1 MiB; DiskSize: 0.0 B
+{
+  "matrix": "matrices/D6-6.mtx",
+  "rows": 120576,
+  "cols": 23740,
+  "nnz": 146880,
+  "scheme": "broadcast",
+  "partitions": 16,
+  "a_partitions": 16,
+  "master": "local[16]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 150.69482987746596,
+  "sequential_ms": 13.103183824568987,
+  "spark_start_ms": 1012.8366069402546,
+  "setup_ms": 1446.8291031662375,
+  "mean_ms": 285.0593911949545,
+  "median_ms": 285.08848580531776,
+  "min_ms": 225.03739991225302,
+  "check": "PASS",
+  "rel_l2": 8.655954075490632e-19,
+  "app_id": "local-1794175656026",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    367.99917998723686,
+    285.08848580531776,
+    295.03715108148754,
+    252.1347391884774,
+    225.03739991225302
+  ]
+}

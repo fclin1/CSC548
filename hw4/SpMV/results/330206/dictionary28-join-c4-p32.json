@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/dictionary28.mtx",
+  "rows": 52652,
+  "cols": 52652,
+  "nnz": 178076,
+  "scheme": "join",
+  "partitions": 32,
+  "a_partitions": 32,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 192.56006297655404,
+  "sequential_ms": 24.451069999486208,
+  "spark_start_ms": 1755.7201888412237,
+  "setup_ms": 3749.473337084055,
+  "mean_ms": 4568.476190418005,
+  "median_ms": 4568.3499299921095,
+  "min_ms": 4451.429021079093,
+  "check": "PASS",
+  "rel_l2": 1.3901064266818625e-16,
+  "app_id": "local-1794175261632",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    4685.161167988554,
+    4568.3499299921095,
+    4576.073124073446,
+    4451.429021079093,
+    4561.367708956823
+  ]
+}

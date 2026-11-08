@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/roadNet-CA.mtx",
+  "rows": 1971281,
+  "cols": 1971281,
+  "nnz": 5533214,
+  "scheme": "join",
+  "partitions": 8,
+  "a_partitions": 8,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 5631.979529978707,
+  "sequential_ms": 611.0604119021446,
+  "spark_start_ms": 1933.8378340471536,
+  "setup_ms": 5132.39318318665,
+  "mean_ms": 18834.77431461215,
+  "median_ms": 18711.39017608948,
+  "min_ms": 18668.529720045626,
+  "check": "PASS",
+  "rel_l2": 7.291475039894359e-17,
+  "app_id": "local-1794179869805",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    19229.738964000717,
+    18668.529720045626,
+    18670.55143089965,
+    18893.661282025278,
+    18711.39017608948
+  ]
+}

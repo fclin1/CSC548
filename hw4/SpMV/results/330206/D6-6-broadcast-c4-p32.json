@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/D6-6.mtx",
+  "rows": 120576,
+  "cols": 23740,
+  "nnz": 146880,
+  "scheme": "broadcast",
+  "partitions": 32,
+  "a_partitions": 32,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 270.93591913580894,
+  "sequential_ms": 31.788533087819815,
+  "spark_start_ms": 1774.3435979355127,
+  "setup_ms": 2872.0071010757238,
+  "mean_ms": 1969.9031464289874,
+  "median_ms": 1975.7984480820596,
+  "min_ms": 1935.8025090768933,
+  "check": "PASS",
+  "rel_l2": 9.916641190749328e-19,
+  "app_id": "local-1794175154371",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    1998.5723257996142,
+    2003.4773950465024,
+    1935.8650541398674,
+    1935.8025090768933,
+    1975.7984480820596
+  ]
+}

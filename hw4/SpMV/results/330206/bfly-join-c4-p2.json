@@ -1,0 +1,31 @@
+{
+  "matrix": "matrices/bfly.mtx",
+  "rows": 49152,
+  "cols": 49152,
+  "nnz": 196608,
+  "scheme": "join",
+  "partitions": 2,
+  "a_partitions": 2,
+  "master": "local[4]",
+  "iters": 5,
+  "warmup": 1,
+  "load_ms": 200.42315986938775,
+  "sequential_ms": 19.60616698488593,
+  "spark_start_ms": 1655.1850179675967,
+  "setup_ms": 2260.086904047057,
+  "mean_ms": 1032.1726307738572,
+  "median_ms": 1006.5574320033193,
+  "min_ms": 988.4811139199883,
+  "check": "PASS",
+  "rel_l2": 7.960399387047487e-17,
+  "app_id": "local-1794176332796",
+  "spark_version": "3.5.0",
+  "python_version": "3.11.13",
+  "iteration_ms": [
+    1090.2097439393401,
+    1074.3264278862625,
+    988.4811139199883,
+    1001.288436120376,
+    1006.5574320033193
+  ]
+}
