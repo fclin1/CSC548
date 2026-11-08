@@ -45,7 +45,7 @@ if [ "$ACTION" == "push" ]; then
     echo " Pushing HW4 code and scripts to ARC ($UNITY_ID@$ARC_HOST)..."
     echo "=================================================================="
 
-    ssh "$UNITY_ID@$ARC_HOST" "mkdir -p $REMOTE_PATH/hw4/SpMV/matrices"
+    ssh "$UNITY_ID@$ARC_HOST" "mkdir -p $REMOTE_PATH/hw4/SpMV"
 
     rsync -avz --progress \
         --exclude '.git' \
@@ -57,14 +57,16 @@ if [ "$ACTION" == "push" ]; then
         --exclude 'matrices' \
         hw4/ "$UNITY_ID@$ARC_HOST:$REMOTE_PATH/hw4/"
 
-    # Link matrices on ARC if already present from previous homeworks
+    # Link matrices directory on ARC if already present from previous homeworks
     ssh "$UNITY_ID@$ARC_HOST" "bash -c '
         if [ ! -f $REMOTE_PATH/hw4/SpMV/matrices/D6-6.mtx ]; then
-            for prev in hw3 hw2 hw1; do
-                if [ -f $REMOTE_PATH/\$prev/SpMV/matrices/D6-6.mtx ]; then
-                    echo \"Linking matrices from \$prev/SpMV/matrices/...\";
-                    ln -sf $REMOTE_PATH/\$prev/SpMV/matrices/* $REMOTE_PATH/hw4/SpMV/matrices/;
-                    break;
+            for cand in $REMOTE_PATH/hw3/SpMV/matrices $REMOTE_PATH/hw2/SpMV/matrices $REMOTE_PATH/hw1/SpMV/matrices /share/\$USER/matrices; do
+                if [ -d \"\$cand\" ] && [ -f \"\$cand/D6-6.mtx\" ]; then
+                    real_dir=\$(cd \"\$cand\" && pwd -P)
+                    echo \"Linking matrices directory to \$real_dir...\"
+                    rm -rf $REMOTE_PATH/hw4/SpMV/matrices 2>/dev/null || true
+                    ln -sfn \"\$real_dir\" $REMOTE_PATH/hw4/SpMV/matrices
+                    break
                 fi
             done
         fi

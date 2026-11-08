@@ -42,21 +42,63 @@ fi
 
 echo ""
 echo "[3/4] Checking Matrices..."
-mkdir -p matrices
-for m in D6-6 dictionary28 bfly roadNet-CA Ga3As3H12 pkustk14; do
-    if [ ! -f "matrices/$m.mtx" ]; then
-        for prev in ../../hw3/SpMV/matrices ../../hw2/SpMV/matrices ../../hw1/SpMV/matrices; do
-            if [ -f "$prev/$m.mtx" ]; then
-                echo "Linking $m.mtx from $prev..."
-                ln -sf "$prev/$m.mtx" "matrices/$m.mtx"
-                break
-            fi
-        done
-    fi
-    if [ -f "matrices/$m.mtx" ]; then
-        echo "  [OK] matrices/$m.mtx ($(ls -lh "matrices/$m.mtx" | awk '{print $5}'))"
+REQUIRED_MATRICES=(
+    "D6-6.mtx"
+    "dictionary28.mtx"
+    "bfly.mtx"
+    "Ga3As3H12.mtx"
+    "pkustk14.mtx"
+    "roadNet-CA.mtx"
+)
+
+matrices_ready=true
+if [ ! -d "matrices" ]; then
+    matrices_ready=false
+else
+    for m in "${REQUIRED_MATRICES[@]}"; do
+        if [ ! -f "matrices/$m" ]; then
+            matrices_ready=false
+            break
+        fi
+    done
+fi
+
+if [ "$matrices_ready" = false ]; then
+    echo "Matrix suite not ready in 'matrices/'. Searching candidate locations..."
+    found_dir=""
+    for cand in \
+        "$SCRIPT_DIR/../../hw3/SpMV/matrices" \
+        "$SCRIPT_DIR/../../hw2/SpMV/matrices" \
+        "$SCRIPT_DIR/../../hw1/SpMV/matrices" \
+        "$HOME/CSC548/hw3/SpMV/matrices" \
+        "$HOME/CSC548/hw2/SpMV/matrices" \
+        "$HOME/CSC548/hw1/SpMV/matrices" \
+        "/share/$USER/matrices"; do
+        if [ -d "$cand" ] && [ -f "$cand/D6-6.mtx" ] && [ -f "$cand/pkustk14.mtx" ]; then
+            found_dir="$(cd "$cand" && pwd -P)"
+            break
+        fi
+    done
+
+    if [ -n "$found_dir" ]; then
+        echo "Found matrix dataset at: $found_dir"
+        rm -rf matrices 2>/dev/null || true
+        ln -sfn "$found_dir" matrices
+        echo "Created symlink: matrices -> $found_dir"
     else
-        echo "  [MISSING] matrices/$m.mtx"
+        echo ""
+        echo "[ERROR] Benchmark matrices not found!"
+        echo "To upload matrices from your local machine to ARC, run from your local terminal:"
+        echo "  bash hw4/sync_arc.sh push fclin --with-matrices"
+        exit 1
+    fi
+fi
+
+for m in "${REQUIRED_MATRICES[@]}"; do
+    if [ -f "matrices/$m" ]; then
+        echo "  [OK] matrices/$m ($(ls -lh "matrices/$m" | awk '{print $5}'))"
+    else
+        echo "  [MISSING] matrices/$m"
     fi
 done
 
