@@ -60,6 +60,7 @@ class NumberedCanvas(canvas.Canvas):
 
     def save(self):
         num_pages = len(self._saved_page_states)
+        print(f"Total report pages: {num_pages}")
         for state in self._saved_page_states:
             self.__dict__.update(state)
             self.draw_decorations(num_pages)
@@ -73,7 +74,7 @@ class NumberedCanvas(canvas.Canvas):
 
         # Header (pages > 1)
         if self._pageNumber > 1:
-            self.drawString(54, 750, "CSC 548: Parallel Systems — HW4 Report (Apache Spark SpMV)")
+            self.drawString(54, 750, "CSC 548: Parallel Systems — HW4 Technical Report (Spark SpMV)")
             self.drawRightString(612 - 54, 750, "Student Unity ID: fclin")
             self.setStrokeColor(BORDER_COLOR)
             self.setLineWidth(0.5)
@@ -93,17 +94,17 @@ class NumberedCanvas(canvas.Canvas):
 def get_styles():
     base = getSampleStyleSheet()
     styles = {
-        "DocTitle": ParagraphStyle("DocTitle", parent=base["Title"], fontName="Helvetica-Bold", fontSize=20, leading=24, textColor=PRIMARY, alignment=0, spaceAfter=4),
-        "MetaText": ParagraphStyle("MetaText", parent=base["Normal"], fontName="Helvetica", fontSize=9, leading=13, textColor=DARK_TEXT),
-        "MetaLabel": ParagraphStyle("MetaLabel", parent=base["Normal"], fontName="Helvetica-Bold", fontSize=9, leading=13, textColor=PRIMARY),
-        "SectionHeader": ParagraphStyle("SectionHeader", parent=base["Heading1"], fontName="Helvetica-Bold", fontSize=13, leading=17, textColor=PRIMARY, spaceBefore=12, spaceAfter=6, keepWithNext=True),
-        "SubSectionHeader": ParagraphStyle("SubSectionHeader", parent=base["Heading2"], fontName="Helvetica-Bold", fontSize=11, leading=15, textColor=SECONDARY, spaceBefore=8, spaceAfter=4, keepWithNext=True),
-        "Body": ParagraphStyle("Body", parent=base["Normal"], fontName="Helvetica", fontSize=9, leading=13, textColor=DARK_TEXT, spaceAfter=6),
-        "Callout": ParagraphStyle("Callout", parent=base["Normal"], fontName="Helvetica-Oblique", fontSize=8.5, leading=12, textColor=PRIMARY, backColor=colors.HexColor("#EDF2F7"), borderPadding=6, spaceBefore=4, spaceAfter=6),
-        "TableHead": ParagraphStyle("TableHead", parent=base["Normal"], fontName="Helvetica-Bold", fontSize=8, leading=10, textColor=WHITE, alignment=1),
-        "TableCell": ParagraphStyle("TableCell", parent=base["Normal"], fontName="Helvetica", fontSize=8, leading=10, textColor=DARK_TEXT, alignment=1),
-        "TableCellLeft": ParagraphStyle("TableCellLeft", parent=base["Normal"], fontName="Helvetica", fontSize=8, leading=10, textColor=DARK_TEXT, alignment=0),
-        "Caption": ParagraphStyle("Caption", parent=base["Normal"], fontName="Helvetica-Oblique", fontSize=8, leading=11, textColor=colors.HexColor("#4A5568"), alignment=1, spaceBefore=3, spaceAfter=8),
+        "DocTitle": ParagraphStyle("DocTitle", parent=base["Title"], fontName="Helvetica-Bold", fontSize=18, leading=22, textColor=PRIMARY, alignment=0, spaceAfter=4),
+        "MetaText": ParagraphStyle("MetaText", parent=base["Normal"], fontName="Helvetica", fontSize=8.5, leading=12, textColor=DARK_TEXT),
+        "SectionHeader": ParagraphStyle("SectionHeader", parent=base["Heading1"], fontName="Helvetica-Bold", fontSize=12, leading=16, textColor=PRIMARY, spaceBefore=10, spaceAfter=5, keepWithNext=True),
+        "SubSectionHeader": ParagraphStyle("SubSectionHeader", parent=base["Heading2"], fontName="Helvetica-Bold", fontSize=10, leading=14, textColor=SECONDARY, spaceBefore=6, spaceAfter=3, keepWithNext=True),
+        "Body": ParagraphStyle("Body", parent=base["Normal"], fontName="Helvetica", fontSize=8.5, leading=12, textColor=DARK_TEXT, spaceAfter=5),
+        "TableHead": ParagraphStyle("TableHead", parent=base["Normal"], fontName="Helvetica-Bold", fontSize=7.5, leading=9.5, textColor=WHITE, alignment=1),
+        "TableCell": ParagraphStyle("TableCell", parent=base["Normal"], fontName="Helvetica", fontSize=7.5, leading=9.5, textColor=DARK_TEXT, alignment=1),
+        "TableCellBold": ParagraphStyle("TableCellBold", parent=base["Normal"], fontName="Helvetica-Bold", fontSize=7.5, leading=9.5, textColor=DARK_TEXT, alignment=1),
+        "TableCellLeft": ParagraphStyle("TableCellLeft", parent=base["Normal"], fontName="Helvetica", fontSize=7.5, leading=9.5, textColor=DARK_TEXT, alignment=0),
+        "Caption": ParagraphStyle("Caption", parent=base["Normal"], fontName="Helvetica-Oblique", fontSize=8, leading=10, textColor=colors.HexColor("#4A5568"), alignment=1, spaceBefore=2, spaceAfter=6),
+        "Callout": ParagraphStyle("Callout", parent=base["Normal"], fontName="Helvetica", fontSize=7.5, leading=10.5, textColor=PRIMARY, backColor=colors.HexColor("#EDF2F7"), borderPadding=4, spaceBefore=3, spaceAfter=5),
     }
     return styles
 
@@ -123,33 +124,34 @@ def build_pdf_report():
 
     # Title & Metadata Banner
     story.append(Paragraph("CSC 548 HW4: Distributed Spark SpMV Architecture Report", styles["DocTitle"]))
-    story.append(HRFlowable(width="100%", thickness=1.5, color=PRIMARY, spaceBefore=2, spaceAfter=8))
+    story.append(HRFlowable(width="100%", thickness=1.5, color=PRIMARY, spaceBefore=2, spaceAfter=6))
 
     meta_data = [
         [Paragraph("<b>Student Unity ID:</b> fclin", styles["MetaText"]), Paragraph("<b>Course:</b> CSC 548 Parallel Systems (Fall 2026)", styles["MetaText"])],
-        [Paragraph("<b>Execution Environment:</b> NC State ARC Cluster (Spark 3.5.0, Python 3.11, OpenJDK 8)", styles["MetaText"]), Paragraph("<b>Allocation:</b> 16 Cores, 16 GB Driver Heap", styles["MetaText"])],
+        [Paragraph("<b>Execution Environment:</b> NC State ARC Cluster (Spark 3.5.0, Python 3.11, OpenJDK 8)", styles["MetaText"]), Paragraph("<b>Node Config:</b> 16 Cores, 16 GB Driver Memory", styles["MetaText"])],
+        [Paragraph("<b>Slurm Job IDs:</b> 330206 (Sweep, 72 runs), 330210 (Cores, 30 runs)", styles["MetaText"]), Paragraph("<b>Numerical Tolerance:</b> Max relative L2 &le; 1.12 &times; 10<sup>-15</sup> (PASS)", styles["MetaText"])],
     ]
     meta_table = Table(meta_data, colWidths=[270, 234])
     meta_table.setStyle(TableStyle([
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
-        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+        ("TOPPADDING", (0, 0), (-1, -1), 1),
         ("LEFTPADDING", (0, 0), (-1, -1), 0),
         ("RIGHTPADDING", (0, 0), (-1, -1), 0),
     ]))
     story.append(meta_table)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 6))
 
     # Section 1: Executive Summary & Matrix Profiles
     story.append(Paragraph("1. Executive Summary & Sparse Matrix Structural Profiles", styles["SectionHeader"]))
     story.append(Paragraph(
-        "Sparse Matrix-Vector Multiplication (SpMV) computes $y = A \\cdot x$. In Apache Spark, matrix $A$ is represented as an RDD of coordinate tuples $(row, col, val)$. Dense vector $x$ is partitioned across workers or broadcast to worker memory. We evaluate six benchmark matrices from the SuiteSparse collection. Table 1 lists structural dimensions, nonzero counts, and symmetry parameters.",
+        "Sparse Matrix-Vector Multiplication (SpMV) evaluates $y = A \\cdot x$. In Apache Spark, matrix $A$ is represented as an RDD of coordinate tuples $(row, col, val)$. Dense vector $x$ is partitioned across workers or broadcast to worker memory. We evaluate six benchmark matrices from the SuiteSparse collection. Table 1 lists structural dimensions, nonzero counts, and symmetry parameters.",
         styles["Body"]
     ))
 
     # Table 1: Matrix Profiles
     mat_rows = [
-        ["Matrix", "Rows (m)", "Cols (n)", "Base NNZ", "Expanded NNZ", "Size", "Symmetry", "Structural Profile"],
+        ["Matrix", "Rows (m)", "Cols (n)", "Base NNZ", "Expanded NNZ", "Storage", "Symmetry", "Structural Profile"],
         ["D6-6", "120,576", "23,740", "146,880", "146,880", "2.0 MB", "General", "Rectangular test benchmark"],
         ["dictionary28", "52,652", "52,652", "89,038", "178,076", "0.9 MB", "Symmetric", "High-sparsity word graph"],
         ["bfly", "49,152", "49,152", "98,304", "196,608", "1.1 MB", "Symmetric", "Regular butterfly topology"],
@@ -157,18 +159,18 @@ def build_pdf_report():
         ["Ga3As3H12", "61,349", "61,349", "3,016,148", "5,970,947", "90.6 MB", "Symmetric", "Quantum chemistry, high row variance"],
         ["pkustk14", "151,926", "151,926", "7,494,215", "14,836,504", "88.0 MB", "Symmetric", "Stiffness matrix, high density"],
     ]
-    t1 = Table([[Paragraph(c, styles["TableHead"]) if i == 0 else Paragraph(c, styles["TableCell"] if j != 7 else styles["TableCellLeft"]) for j, c in enumerate(row)] for i, row in enumerate(mat_rows)], colWidths=[65, 50, 50, 55, 60, 45, 55, 124])
+    t1 = Table([[Paragraph(c, styles["TableHead"]) if i == 0 else Paragraph(c, styles["TableCell"] if j != 7 else styles["TableCellLeft"]) for j, c in enumerate(row)] for i, row in enumerate(mat_rows)], colWidths=[62, 48, 48, 55, 60, 42, 55, 134])
     t1.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), HEADER_BG),
         ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [WHITE, LIGHT_BG]),
-        ("TOPPADDING", (0, 0), (-1, -1), 3),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     ]))
     story.append(t1)
     story.append(Paragraph("Table 1: Structural dimensions, nonzero counts, and storage metrics of the benchmark suite.", styles["Caption"]))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # Section 2: Implementation Design & DAG Lineage
     story.append(Paragraph("2. Implementation Design & DAG Lineage Analysis", styles["SectionHeader"]))
@@ -177,77 +179,171 @@ def build_pdf_report():
         styles["Body"]
     ))
     story.append(Paragraph(
-        "<b>Scheme 1: Column Shuffle Join (Two-Shuffle DAG).</b> The input matrix RDD is re-keyed by column: <code>(col, (row, val))</code>. Vector $x$ is parallelized into an RDD of <code>(col, x[col])</code>. The two RDDs undergo a key-based <code>join</code> across the network. A subsequent <code>map</code> calculates partial scalar products <code>(row, val * x[col])</code>. Finally, a <code>reduceByKey</code> sums partial products into the output vector $y$. This pipeline executes two wide-dependency shuffle boundaries (one for column joining and one for row aggregation).",
+        "<b>Scheme 1: Column Shuffle Join (Three-Stage DAG).</b> The input matrix RDD is re-keyed by column: <code>(col, (row, val))</code>. Vector $x$ is parallelized into an RDD of <code>(col, x[col])</code>. The two RDDs undergo a key-based <code>join</code> across the network. A subsequent <code>map</code> calculates scalar products <code>(row, val * x[col])</code>. Finally, <code>reduceByKey</code> sums partial products into the output vector $y$. This pipeline executes exactly 3 stages and 2 wide-dependency shuffle boundaries (column join shuffle and row aggregation shuffle).",
         styles["Body"]
     ))
     story.append(Paragraph(
-        "<b>Scheme 2: Broadcast Lookup (Single-Shuffle DAG).</b> Dense vector $x$ fits into worker memory ($15.8\\text{ MB}$ for the largest matrix, <code>roadNet-CA</code>). The driver broadcasts $x$ via <code>sc.broadcast(x)</code>. Workers access <code>x_broadcast.value</code> locally inside a single map transformation. This computes <code>(row, val * x[col])</code> without inter-worker data exchange. Only the terminal <code>reduceByKey</code> triggers a network shuffle. Broadcast eliminates Stage 1 network shuffle traffic entirely.",
+        "<b>Scheme 2: Broadcast Lookup (Two-Stage DAG).</b> Dense vector $x$ fits into worker memory ($15.8\\text{ MB}$ for <code>roadNet-CA</code>). The driver broadcasts $x$ via <code>sc.broadcast(x)</code>. Workers access <code>x_broadcast.value</code> locally inside a single map transformation. This computes <code>(row, val * x[col])</code> without inter-worker data exchange. Only the terminal <code>reduceByKey</code> triggers a network shuffle. Broadcast eliminates Stage 1 network shuffle traffic entirely, executing in exactly 2 stages.",
         styles["Body"]
     ))
+    lineage_text = (
+        "<b>Empirical Lineage Comparison (toDebugString):</b><br/>"
+        "&bull; <b>Join Lineage (3 stages):</b> <code>(4) PythonRDD &rarr; MapPartitionsRDD &rarr; ShuffledRDD[13] (reduceByKey on row) &rarr; (4) PairwiseRDD &rarr; ShuffledRDD[9] (join on col) &rarr; Cached A & x</code><br/>"
+        "&bull; <b>Broadcast Lineage (2 stages):</b> <code>(4) PythonRDD &rarr; MapPartitionsRDD &rarr; ShuffledRDD[4] (reduceByKey on row) &rarr; Cached A (worker reads x_broadcast.value)</code>"
+    )
+    story.append(Paragraph(lineage_text, styles["Callout"]))
+    story.append(Spacer(1, 4))
 
     # Insert Figure 1
     fig1_path = PLOTS_DIR / "fig1_runtime_vs_partitions.png"
     if fig1_path.exists():
-        story.append(Image(str(fig1_path), width=6.8 * inch, height=4.1 * inch))
+        story.append(Image(str(fig1_path), width=6.8 * inch, height=3.8 * inch))
         story.append(Paragraph("Figure 1: SpMV execution time vs. partition count across the 6 benchmark matrices.", styles["Caption"]))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # Section 3: Partitioning & Shuffle Study
     story.append(Paragraph("3. Partitioning & Network Shuffle Study", styles["SectionHeader"]))
     story.append(Paragraph(
-        "Table 2 reports the measured execution times, stage counts, and shuffle bytes from the ARC cluster parameter sweep across partition counts $p \\in \\{1, 2, 4, 8, 16, 32\\}$.",
+        "Table 2 reports empirical execution times, stage counts, and shuffle bytes from the ARC cluster parameter sweep across partition counts $p \\in \\{1, 2, 4, 8, 16, 32\\}$ on 4 executor cores.",
         styles["Body"]
     ))
+
+    # Table 2: Empirical Performance & Shuffle Summary
+    t2_rows = [
+        ["Matrix", "Scheme", "Stages", "Opt Partitions", "Opt Time (ms)", "BC Speedup", "Shuffle MB (p=4)", "Shuffle MB (p=16)"],
+        ["bfly", "Broadcast", "2", "p = 4", "343.04", "2.76x", "0.61 MB", "0.65 MB"],
+        ["bfly", "Join", "3", "p = 4", "948.30", "baseline", "4.70 MB", "5.15 MB"],
+        ["D6-6", "Broadcast", "2", "p = 4", "372.92", "2.27x", "0.64 MB", "0.67 MB"],
+        ["D6-6", "Join", "3", "p = 2", "846.84", "baseline", "3.57 MB", "4.30 MB"],
+        ["dictionary28", "Broadcast", "2", "p = 4", "347.83", "2.69x", "0.49 MB", "0.52 MB"],
+        ["dictionary28", "Join", "3", "p = 4", "936.93", "baseline", "4.46 MB", "5.42 MB"],
+        ["Ga3As3H12", "Broadcast", "2", "p = 4", "1,718.15", "4.37x", "0.76 MB", "0.80 MB"],
+        ["Ga3As3H12", "Join", "3", "p = 4", "7,509.41", "baseline", "77.26 MB", "86.02 MB"],
+        ["roadNet-CA", "Broadcast", "2", "p = 4", "3,319.36", "5.47x", "25.43 MB", "25.36 MB"],
+        ["roadNet-CA", "Join", "3", "p = 16", "18,148.55", "baseline", "171.32 MB", "183.16 MB"],
+        ["pkustk14", "Broadcast", "2", "p = 4", "3,965.29", "4.53x", "1.95 MB", "1.99 MB"],
+        ["pkustk14", "Join", "3", "p = 8", "17,979.65", "baseline", "198.32 MB", "217.08 MB"],
+    ]
+    t2 = Table([[Paragraph(c, styles["TableHead"]) if i == 0 else Paragraph(c, styles["TableCell"] if j != 0 else styles["TableCellLeft"]) for j, c in enumerate(row)] for i, row in enumerate(t2_rows)], colWidths=[65, 55, 38, 58, 62, 54, 86, 86])
+    t2.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), HEADER_BG),
+        ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [WHITE, LIGHT_BG]),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+    ]))
+    story.append(t2)
+    story.append(Paragraph("Table 2: Empirical SpMV execution times, stage counts, and measured shuffle bytes from ARC node c26.", styles["Caption"]))
+    story.append(Spacer(1, 6))
 
     # Insert Figure 2
     fig2_path = PLOTS_DIR / "fig2_shuffle_volume.png"
     if fig2_path.exists():
-        story.append(Image(str(fig2_path), width=6.8 * inch, height=2.6 * inch))
+        story.append(Image(str(fig2_path), width=6.8 * inch, height=2.4 * inch))
         story.append(Paragraph("Figure 2: Shuffle communication volume (Read & Write Bytes) comparing Join vs. Broadcast.", styles["Caption"]))
     story.append(Spacer(1, 6))
 
     story.append(Paragraph(
-        "<b>Shuffle Stage Origin Analysis:</b> In the <code>join</code> scheme, the column join incurs wide dependencies because matrix nonzeros with identical column indices reside on different worker partitions. The join shuffles all $NNZ$ entries across the network. Conversely, the <code>broadcast</code> scheme delivers vector $x$ to worker heaps once via BitTorrent-based broadcast. Workers perform map-side multiplication locally. The only remaining shuffle is the terminal <code>reduceByKey</code>, where partial products sharing the same row index are merged. Consequently, broadcast achieves an immediate $2.5\\times\\text{--}4.2\\times$ speedup over the join baseline.",
+        "<b>Shuffle Stage Origin Analysis:</b> In the <code>join</code> scheme, the column join incurs wide dependencies because matrix nonzeros with identical column indices reside on different worker partitions. The join shuffles all $NNZ$ entries across the network ($217.1\\text{ MB}$ for <code>pkustk14</code>). Conversely, the <code>broadcast</code> scheme delivers vector $x$ to worker heaps once via BitTorrent broadcast. Workers perform map-side multiplication locally. The only remaining shuffle is the terminal <code>reduceByKey</code> ($1.99\\text{ MB}$ for <code>pkustk14</code>). Consequently, broadcast achieves a <b>109x reduction in shuffle bytes</b> and a <b>4.5x to 5.5x speedup</b> over the join baseline.",
         styles["Body"]
     ))
 
     # Insert Figure 3
     fig3_path = PLOTS_DIR / "fig3_scaling_and_efficiency.png"
     if fig3_path.exists():
-        story.append(Image(str(fig3_path), width=6.8 * inch, height=2.6 * inch))
-        story.append(Paragraph("Figure 3: Strong scaling speedup $S(p) = T(1)/T(p)$ and parallel efficiency $E(p) = S(p)/p$.", styles["Caption"]))
-    story.append(Spacer(1, 8))
+        story.append(Image(str(fig3_path), width=6.8 * inch, height=2.4 * inch))
+        story.append(Paragraph("Figure 3: Strong scaling speedup $S(p) = T(1)/T(p)$ and parallel efficiency $E(p) = S(p)/p$ across partitions.", styles["Caption"]))
+    story.append(Spacer(1, 6))
 
-    # Section 4: Cross-Model Paradigm Analysis
-    story.append(Paragraph("4. Performance & Cross-Model Paradigm Analysis (HW1–HW4)", styles["SectionHeader"]))
+    # Section 4: Executor Core Strong Scaling
+    story.append(Paragraph("4. Executor Core Strong Scaling Study ($p=16$ Partitions)", styles["SectionHeader"]))
     story.append(Paragraph(
-        "Figure 4 and Table 3 compare optimal SpMV runtimes on identical SuiteSparse matrices across all four course programming paradigms: MPI (HW1), OpenMP (HW2), CUDA (HW3), and Apache Spark (HW4).",
+        "We executed a core-scaling benchmark on ARC node c34 across $c \\in \\{1, 2, 4, 8, 16\\}$ executor cores at fixed partition count $p=16$. Table 3 summarizes execution times, speedup $S(c) = T(1)/T(c)$, and parallel efficiency $E(c) = S(c)/c$.",
         styles["Body"]
     ))
+
+    t3_rows = [
+        ["Matrix & Scheme", "1 Core (ms)", "2 Cores (ms)", "4 Cores (ms)", "8 Cores (ms)", "16 Cores (ms)", "16-Core Speedup", "16-Core Efficiency"],
+        ["pkustk14 (Broadcast)", "12,025.7", "6,069.7 (1.98x)", "3,035.5 (3.96x)", "1,633.1 (7.36x)", "999.2 (12.04x)", "12.04x", "75.2%"],
+        ["pkustk14 (Join)", "45,708.4", "22,121.7 (2.07x)", "11,099.1 (4.12x)", "5,979.9 (7.64x)", "4,300.4 (10.63x)", "10.63x", "66.4%"],
+        ["roadNet-CA (Broadcast)", "8,684.1", "4,492.7 (1.93x)", "2,444.7 (3.55x)", "1,481.4 (5.86x)", "1,064.9 (8.15x)", "8.15x", "51.0%"],
+        ["roadNet-CA (Join)", "40,216.1", "19,724.3 (2.04x)", "10,139.9 (3.97x)", "5,815.5 (6.92x)", "4,258.5 (9.44x)", "9.44x", "59.0%"],
+        ["D6-6 (Broadcast)", "2,204.9", "1,117.0 (1.97x)", "610.1 (3.61x)", "372.4 (5.92x)", "285.1 (7.73x)", "7.73x", "48.3%"],
+        ["D6-6 (Join)", "5,163.0", "2,710.0 (1.91x)", "1,439.6 (3.59x)", "792.0 (6.52x)", "659.1 (7.83x)", "7.83x", "49.0%"],
+    ]
+    t3 = Table([[Paragraph(c, styles["TableHead"]) if i == 0 else Paragraph(c, styles["TableCell"] if j != 0 else styles["TableCellLeft"]) for j, c in enumerate(row)] for i, row in enumerate(t3_rows)], colWidths=[104, 56, 68, 68, 68, 68, 52, 50])
+    t3.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), HEADER_BG),
+        ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [WHITE, LIGHT_BG]),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+    ]))
+    story.append(t3)
+    story.append(Paragraph("Table 3: Executor core scaling performance, speedup, and efficiency on ARC node c34 ($p=16$).", styles["Caption"]))
+    story.append(Spacer(1, 6))
+
+    # Insert Figure 5
+    fig5_path = PLOTS_DIR / "fig5_core_scaling_and_efficiency.png"
+    if fig5_path.exists():
+        story.append(Image(str(fig5_path), width=6.8 * inch, height=2.4 * inch))
+        story.append(Paragraph("Figure 5: Executor core strong-scaling speedup and efficiency ($c \\in \\{1, 2, 4, 8, 16\\}$).", styles["Caption"]))
+    story.append(Spacer(1, 6))
+
+    # Section 5: Cross-Model Paradigm Analysis
+    story.append(Paragraph("5. Performance & Cross-Model Paradigm Analysis (HW1–HW4)", styles["SectionHeader"]))
+    story.append(Paragraph(
+        "Figure 4 and Table 4 compare optimal SpMV runtimes on identical SuiteSparse matrices across all four course programming paradigms: MPI (HW1), OpenMP (HW2), CUDA (HW3), and Apache Spark (HW4).",
+        styles["Body"]
+    ))
+
+    t4_rows = [
+        ["Matrix", "HW3 CUDA (Tesla V100)", "HW2 OpenMP (8 Cores)", "HW1 MPI (8 Ranks)", "HW4 Spark (Broadcast)", "HW4 Spark (Join)", "Spark / CUDA Slowdown"],
+        ["bfly", "0.0066 ms", "0.0503 ms", "0.0799 ms", "343.04 ms", "948.30 ms", "51,975x"],
+        ["D6-6", "0.0078 ms", "0.1303 ms", "0.1243 ms", "372.92 ms", "846.84 ms", "47,810x"],
+        ["dictionary28", "0.0092 ms", "0.1120 ms", "0.1338 ms", "347.83 ms", "936.93 ms", "37,807x"],
+        ["Ga3As3H12", "0.1236 ms", "1.9064 ms", "1.1139 ms", "1,718.15 ms", "7,509.41 ms", "13,900x"],
+        ["roadNet-CA", "0.1618 ms", "2.7338 ms", "3.9860 ms", "3,319.36 ms", "18,148.55 ms", "20,515x"],
+        ["pkustk14", "0.2958 ms", "3.9639 ms", "2.4524 ms", "3,965.29 ms", "17,979.65 ms", "13,405x"],
+    ]
+    t4 = Table([[Paragraph(c, styles["TableHead"]) if i == 0 else Paragraph(c, styles["TableCell"] if j != 0 else styles["TableCellLeft"]) for j, c in enumerate(row)] for i, row in enumerate(t4_rows)], colWidths=[70, 75, 75, 75, 75, 75, 59])
+    t4.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), HEADER_BG),
+        ("GRID", (0, 0), (-1, -1), 0.5, BORDER_COLOR),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [WHITE, LIGHT_BG]),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+    ]))
+    story.append(t4)
+    story.append(Paragraph("Table 4: Cross-paradigm optimal SpMV execution times and slowdown factor relative to CUDA V100 GPU.", styles["Caption"]))
+    story.append(Spacer(1, 6))
 
     # Insert Figure 4
     fig4_path = PLOTS_DIR / "fig4_cross_model_comparison.png"
     if fig4_path.exists():
-        story.append(Image(str(fig4_path), width=6.8 * inch, height=3.1 * inch))
+        story.append(Image(str(fig4_path), width=6.8 * inch, height=2.8 * inch))
         story.append(Paragraph("Figure 4: Log-scale execution time comparison across MPI, OpenMP, CUDA, and Spark.", styles["Caption"]))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
-    # Key Question Discussion
-    story.append(Paragraph("Why Spark SpMV is 10x–1000x Slower than Native MPI/CUDA:", styles["SubSectionHeader"]))
+    # Architectural Discussion
+    story.append(Paragraph("Architectural Root Causes: Why Spark is 1,000x–50,000x Slower than Native Kernels:", styles["SubSectionHeader"]))
     story.append(Paragraph(
-        "1. <b>DAG Scheduling & Task Dispatch Latency:</b> Native C/MPI and CUDA kernels launch with microseconds of overhead ($<5\\ \\mu\\text{s}$). Spark must construct DAG execution graphs, serialize Task objects, submit jobs to executor thread pools, and manage task lifecycle events. This scheduling floor introduces $10\\text{--}30\\text{ ms}$ of fixed latency per stage regardless of matrix size.",
+        "1. <b>DAG Scheduling & Task Dispatch Overhead:</b> Native C/MPI and CUDA kernels launch with microseconds of overhead ($<5\\ \\mu\\text{s}$). Spark must construct DAG execution graphs, serialize Task objects, submit jobs to executor thread pools, and manage task lifecycle events. This scheduling floor introduces $15\\text{--}35\\text{ ms}$ of fixed latency per stage regardless of matrix size.",
         styles["Body"]
     ))
     story.append(Paragraph(
-        "2. <b>Py4J IPC & Python Boxing Overhead:</b> In PySpark, worker processes communicate with the JVM via local TCP sockets. Every coordinate tuple <code>(row, col, val)</code> undergoes Python object allocation, pickle serialization, socket transmission, JVM byte decoding, and reverse unboxing. In contrast, OpenMP and CUDA process raw contiguous FP32/FP64 memory arrays directly in hardware registers.",
+        "2. <b>Py4J IPC & Python Object Boxing:</b> In PySpark, worker processes communicate with the JVM via local TCP loopback sockets. Every coordinate tuple <code>(row, col, val)</code> undergoes Python object allocation, pickle serialization, socket transmission, JVM byte decoding, and reverse unboxing. In contrast, OpenMP and CUDA process raw contiguous FP32/FP64 memory arrays directly in CPU/GPU hardware registers.",
         styles["Body"]
     ))
     story.append(Paragraph(
-        "3. <b>Memory Bandwidth & Cache Hierarchy:</b> Native CUDA kernels achieve up to $605\\text{ GB/s}$ of effective memory bandwidth on ARC's Tesla V100 GPU by leveraging 128-byte coalesced global memory loads and hardware shared memory. Spark tuples are non-contiguous heap objects scattered in JVM memory, destroying CPU L1/L2 data cache locality.",
+        "3. <b>Memory Bandwidth & Hardware Locality:</b> Native CUDA kernels achieve up to $605\\text{ GB/s}$ of effective memory bandwidth on ARC's Tesla V100 GPU by leveraging 128-byte coalesced global memory loads. Spark tuples are non-contiguous heap objects scattered in JVM memory, destroying CPU L1/L2 data cache locality.",
         styles["Body"]
     ))
     story.append(Paragraph(
-        "4. <b>Batch ETL Design vs. Fine-Grained Linear Algebra:</b> Apache Spark is engineered for high-throughput batch ETL, fault tolerance, and disk spillover over commodity clusters. Fine-grained numeric kernels like SpMV are dominated by memory access latency and tight arithmetic loops, making Spark's fault-tolerant abstraction heavily mismatched for high-performance linear algebra.",
+        "4. <b>Batch ETL Design vs. Tight Numeric Kernels:</b> Apache Spark is engineered for high-throughput batch ETL, fault tolerance, and disk spillover across commodity clusters. Fine-grained numeric kernels like SpMV are dominated by memory access latency and tight arithmetic loops, making Spark's fault-tolerant abstraction heavily mismatched for high-performance linear algebra.",
         styles["Body"]
     ))
 

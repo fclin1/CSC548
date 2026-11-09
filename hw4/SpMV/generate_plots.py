@@ -330,6 +330,98 @@ def plot_cross_model_comparison(spark_df, out_dir):
     print(f"Saved: {out_path}")
 
 
+def plot_core_scaling(results_dir, out_dir):
+    """Figure 5: Executor Core Strong-Scaling Speedup and Efficiency (cores 1 to 16)."""
+    cores_csv = Path(results_dir) / "spark_cores.csv"
+    if not cores_csv.exists():
+        print("Skipping Figure 5 (no spark_cores.csv).")
+        return
+
+    df = pd.read_csv(cores_csv)
+    df["clean_matrix"] = df["matrix"].apply(clean_matrix_name)
+    df["cores"] = df["master"].str.extract(r"local\[(\d+)\]").astype(int)
+    df["mean_ms"] = df["mean_ms"].astype(float)
+
+    # Compute speedup relative to cores=1
+    records = []
+    for mat in df["clean_matrix"].unique():
+        for scheme in df["scheme"].unique():
+            sub = df[(df["clean_matrix"] == mat) & (df["scheme"] == scheme)].sort_values("cores")
+            if sub.empty or (sub["cores"] == 1).sum() == 0:
+                continue
+            t1 = sub[sub["cores"] == 1]["mean_ms"].values[0]
+            for _, row in sub.iterrows():
+                c = int(row["cores"])
+                sp = t1 / row["mean_ms"]
+                eff = sp / c
+                records.append({
+                    "matrix": mat, "scheme": scheme, "cores": c,
+                    "speedup": sp, "efficiency": eff, "mean_ms": row["mean_ms"]
+                })
+
+    if not records:
+        return
+
+    sdf = pd.DataFrame(records)
+
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+    # Panel 1: Speedup vs Cores
+    ax = axes[0]
+    cores_range = np.array([1, 2, 4, 8, 16])
+    ax.plot(cores_range, cores_range, "k--", label="Ideal Linear", alpha=0.7)
+
+    for mat in sdf["matrix"].unique():
+        for scheme in ["broadcast", "join"]:
+            m_df = sdf[(sdf["matrix"] == mat) & (sdf["scheme"] == scheme)].sort_values("cores")
+            if not m_df.empty:
+                marker = "o" if scheme == "broadcast" else "s"
+                linestyle = "-" if scheme == "broadcast" else ":"
+                ax.plot(
+                    m_df["cores"], m_df["speedup"],
+                    marker=marker, linestyle=linestyle,
+                    label=f"{mat} ({scheme})",
+                )
+
+    ax.set_title("Core Speedup $S(c) = T(1) / T(c)$ at $p=16$", fontweight="bold")
+    ax.set_xlabel("Executor Cores ($c$)")
+    ax.set_ylabel("Speedup Factor")
+    ax.set_xticks([1, 2, 4, 8, 16])
+    ax.grid(True)
+    ax.legend(loc="upper left", fontsize=8, frameon=True)
+
+    # Panel 2: Parallel Efficiency vs Cores
+    ax = axes[1]
+    ax.axhline(100.0, color="k", linestyle="--", label="Ideal (100%)", alpha=0.7)
+
+    for mat in sdf["matrix"].unique():
+        for scheme in ["broadcast", "join"]:
+            m_df = sdf[(sdf["matrix"] == mat) & (sdf["scheme"] == scheme)].sort_values("cores")
+            if not m_df.empty:
+                marker = "o" if scheme == "broadcast" else "s"
+                linestyle = "-" if scheme == "broadcast" else ":"
+                ax.plot(
+                    m_df["cores"], m_df["efficiency"] * 100,
+                    marker=marker, linestyle=linestyle,
+                    label=f"{mat} ({scheme})",
+                )
+
+    ax.set_title("Core Parallel Efficiency $E(c) = S(c) / c$", fontweight="bold")
+    ax.set_xlabel("Executor Cores ($c$)")
+    ax.set_ylabel("Parallel Efficiency (%)")
+    ax.set_xticks([1, 2, 4, 8, 16])
+    ax.set_ylim(0, 115)
+    ax.grid(True)
+    ax.legend(loc="lower left", fontsize=8, frameon=True)
+
+    plt.suptitle("Figure 5: Executor Core Strong-Scaling Speedup and Efficiency ($p=16$ Partitions)", y=1.02, fontsize=13, fontweight="bold")
+    plt.tight_layout()
+    out_path = Path(out_dir) / "fig5_core_scaling_and_efficiency.png"
+    plt.savefig(out_path, bbox_inches="tight")
+    plt.close()
+    print(f"Saved: {out_path}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", default="results", help="directory with spark.csv and shuffle.csv")
@@ -347,6 +439,7 @@ def main():
     plot_shuffle_volume(shuf_df, out_dir)
     plot_speedup_and_efficiency(spark_df, out_dir)
     plot_cross_model_comparison(spark_df, out_dir)
+    plot_core_scaling(results_dir, out_dir)
     print("All plots generated successfully.")
 
 
