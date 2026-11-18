@@ -16,7 +16,7 @@ As for the dataset, I’m still considering between several, but among them incl
 **Milestones**
 
 1. Environment and Baseline  
-2. Naiva CUDA Kernel  
+2. Naive CUDA Kernel  
 3. GPU optimizations  
 4. Scaling experiments and measurements  
 5. In-class presentation   
