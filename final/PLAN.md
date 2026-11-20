@@ -25,7 +25,7 @@ This document is both the **authoritative technical specification** and the **li
 - **Overall Progress:** `0 / 14` tasks completed (`0%`)
 - **Current Phase:** `Phase 0`
 - **Current Active Task:** `0.1`
-- **Active Dataset Mode:** `PENDING` (`UCI_SUSY` or `SYNTHETIC_FALLBACK`)
+- **Active Dataset Mode:** `UCI_SUSY` (5,000,000 points, 18 features)
 - **Last Updated (UTC):** `PENDING`
 
 | Task ID | Phase | Task Name | Status | Primary Artifact(s) | Evidence / Key Metric | Updated (UTC) |
