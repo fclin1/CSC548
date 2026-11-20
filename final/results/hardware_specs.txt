@@ -1,0 +1,301 @@
+=== UNAME ===
+Linux Frank-PC 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+
+=== CPU INFO ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           39 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  6
+On-line CPU(s) list:                     0-5
+Vendor ID:                               GenuineIntel
+Model name:                              Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz
+CPU family:                              6
+Model:                                   158
+Thread(s) per core:                      1
+Core(s) per socket:                      6
+Socket(s):                               1
+Stepping:                                12
+BogoMIPS:                                7392.02
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp tpr_shadow ept vpid ept_ad fsgsbase bmi1 hle avx2 smep bmi2 erms invpcid rtm rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 xsaves vnmi md_clear flush_l1d arch_capabilities
+Virtualization:                          VT-x
+Hypervisor vendor:                       Microsoft
+Virtualization type:                     full
+L1d cache:                               192 KiB (6 instances)
+L1i cache:                               192 KiB (6 instances)
+L2 cache:                                1.5 MiB (6 instances)
+L3 cache:                                9 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-5
+Vulnerability Gather data sampling:      Unknown: Dependent on hypervisor status
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Mitigation; Aligned branch/return thunks
+Vulnerability Itlb multihit:             KVM: Mitigation: Split huge pages
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Mitigation; Clear CPU buffers; SMT Host state unknown
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Mitigation; Clear CPU buffers; SMT Host state unknown
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Mitigation; IBRS
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; IBRS; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                     Unknown: Dependent on hypervisor status
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Mitigation; Clear CPU buffers; SMT Host state unknown
+Vulnerability Vmscape:                   Not affected
+
+=== MEMORY INFO ===
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       606Mi       5.9Gi       4.3Mi       1.4Gi       7.1Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+=== GCC VERSION ===
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+=== NVCC VERSION ===
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Fri_Jan__6_16:45:21_PST_2023
+Cuda compilation tools, release 12.0, V12.0.140
+Build cuda_12.0.r12.0/compiler.32267302_0
+
+=== NVIDIA-SMI ===
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Thu Nov 19 21:20:57 2026
+Driver Version                            : 560.94
+CUDA Version                              : 12.6
+
+Attached GPUs                             : 1
+GPU 00000000:01:00.0
+    Product Name                          : NVIDIA GeForce GTX 1080 Ti
+    Product Brand                         : GeForce
+    Product Architecture                  : Pascal
+    Display Mode                          : Enabled
+    Display Active                        : Enabled
+    Persistence Mode                      : Enabled
+    Addressing Mode                       : N/A
+    MIG Mode
+        Current                           : N/A
+        Pending                           : N/A
+    Accounting Mode                       : Disabled
+    Accounting Mode Buffer Size           : 4000
+    Driver Model
+        Current                           : WDDM
+        Pending                           : WDDM
+    Serial Number                         : N/A
+    GPU UUID                              : GPU-3fbcd43e-c29b-caa5-1841-747063d83d1f
+    Minor Number                          : N/A
+    VBIOS Version                         : 86.02.39.00.6a
+    MultiGPU Board                        : No
+    Board ID                              : 0x100
+    Board Part Number                     : N/A
+    GPU Part Number                       : 1B06-350-A1
+    FRU Part Number                       : N/A
+    Module ID                             : 1
+    Inforom Version
+        Image Version                     : G001.0000.01.04
+        OEM Object                        : 1.1
+        ECC Object                        : N/A
+        Power Management Object           : N/A
+    Inforom BBX Object Flush
+        Latest Timestamp                  : N/A
+        Latest Duration                   : N/A
+    GPU Operation Mode
+        Current                           : N/A
+        Pending                           : N/A
+    GPU C2C Mode                          : N/A
+    GPU Virtualization Mode
+        Virtualization Mode               : None
+        Host VGPU Mode                    : N/A
+        vGPU Heterogeneous Mode           : N/A
+    GPU Reset Status
+        Reset Required                    : No
+        Drain and Reset Recommended       : N/A
+    GSP Firmware Version                  : N/A
+    IBMNPU
+        Relaxed Ordering Mode             : N/A
+    PCI
+        Bus                               : 0x01
+        Device                            : 0x00
+        Domain                            : 0x0000
+        Device Id                         : 0x1B0610DE
+        Bus Id                            : 00000000:01:00.0
+        Sub System Id                     : 0x374C1458
+        GPU Link Info
+            PCIe Generation
+                Max                       : 3
+                Current                   : 3
+                Device Current            : 3
+                Device Max                : 3
+                Host Max                  : 3
+            Link Width
+                Max                       : 16x
+                Current                   : 16x
+        Bridge Chip
+            Type                          : N/A
+            Firmware                      : N/A
+        Replays Since Reset               : 0
+        Replay Number Rollovers           : 0
+        Tx Throughput                     : 0 KB/s
+        Rx Throughput                     : 5 KB/s
+        Atomic Caps Outbound              : N/A
+        Atomic Caps Inbound               : N/A
+    Fan Speed                             : 0 %
+    Performance State                     : P0
+    Clocks Event Reasons
+        Idle                              : Not Active
+        Applications Clocks Setting       : Not Active
+        SW Power Cap                      : Not Active
+        HW Slowdown                       : Not Active
+            HW Thermal Slowdown           : Not Active
+            HW Power Brake Slowdown       : Not Active
+        Sync Boost                        : Not Active
+        SW Thermal Slowdown               : Not Active
+        Display Clock Setting             : Not Active
+    Sparse Operation Mode                 : N/A
+    FB Memory Usage
+        Total                             : 11264 MiB
+        Reserved                          : 157 MiB
+        Used                              : 1559 MiB
+        Free                              : 9549 MiB
+    BAR1 Memory Usage
+        Total                             : 256 MiB
+        Used                              : 229 MiB
+        Free                              : 27 MiB
+    Conf Compute Protected Memory Usage
+        Total                             : N/A
+        Used                              : N/A
+        Free                              : N/A
+    Compute Mode                          : Default
+    Utilization
+        Gpu                               : 4 %
+        Memory                            : 3 %
+        Encoder                           : 0 %
+        Decoder                           : 0 %
+        JPEG                              : N/A
+        OFA                               : N/A
+    Encoder Stats
+        Active Sessions                   : 0
+        Average FPS                       : 0
+        Average Latency                   : 0
+    FBC Stats
+        Active Sessions                   : 0
+        Average FPS                       : 0
+        Average Latency                   : 0
+    ECC Mode
+        Current                           : N/A
+        Pending                           : N/A
+    ECC Errors
+        Volatile
+            Single Bit            
+                Device Memory             : N/A
+                Register File             : N/A
+                L1 Cache                  : N/A
+                L2 Cache                  : N/A
+                Texture Memory            : N/A
+                Texture Shared            : N/A
+                CBU                       : N/A
+                Total                     : N/A
+            Double Bit            
+                Device Memory             : N/A
+                Register File             : N/A
+                L1 Cache                  : N/A
+                L2 Cache                  : N/A
+                Texture Memory            : N/A
+                Texture Shared            : N/A
+                CBU                       : N/A
+                Total                     : N/A
+        Aggregate
+            Single Bit            
+                Device Memory             : N/A
+                Register File             : N/A
+                L1 Cache                  : N/A
+                L2 Cache                  : N/A
+                Texture Memory            : N/A
+                Texture Shared            : N/A
+                CBU                       : N/A
+                Total                     : N/A
+            Double Bit            
+                Device Memory             : N/A
+                Register File             : N/A
+                L1 Cache                  : N/A
+                L2 Cache                  : N/A
+                Texture Memory            : N/A
+                Texture Shared            : N/A
+                CBU                       : N/A
+                Total                     : N/A
+    Retired Pages
+        Single Bit ECC                    : N/A
+        Double Bit ECC                    : N/A
+        Pending Page Blacklist            : N/A
+    Remapped Rows                         : N/A
+    Temperature
+        GPU Current Temp                  : 45 C
+        GPU T.Limit Temp                  : N/A
+        GPU Shutdown Temp                 : 96 C
+        GPU Slowdown Temp                 : 93 C
+        GPU Max Operating Temp            : N/A
+        GPU Target Temperature            : 84 C
+        Memory Current Temp               : N/A
+        Memory Max Operating Temp         : N/A
+    GPU Power Readings
+        Power Draw                        : 62.85 W
+        Current Power Limit               : 250.00 W
+        Requested Power Limit             : 250.00 W
+        Default Power Limit               : 250.00 W
+        Min Power Limit                   : 125.00 W
+        Max Power Limit                   : 300.00 W
+    GPU Memory Power Readings 
+        Power Draw                        : N/A
+    Module Power Readings
+        Power Draw                        : N/A
+        Current Power Limit               : N/A
+        Requested Power Limit             : N/A
+        Default Power Limit               : N/A
+        Min Power Limit                   : N/A
+        Max Power Limit                   : N/A
+    Clocks
+        Graphics                          : 1417 MHz
+        SM                                : 1417 MHz
+        Memory                            : 5508 MHz
+        Video                             : 1202 MHz
+    Applications Clocks
+        Graphics                          : N/A
+        Memory                            : N/A
+    Default Applications Clocks
+        Graphics                          : N/A
+        Memory                            : N/A
+    Deferred Clocks
+        Memory                            : N/A
+    Max Clocks
+        Graphics                          : 1949 MHz
+        SM                                : 1949 MHz
+        Memory                            : 5505 MHz
+        Video                             : 1620 MHz
+    Max Customer Boost Clocks
+        Graphics                          : N/A
+    Clock Policy
+        Auto Boost                        : N/A
+        Auto Boost Default                : N/A
+    Voltage
+        Graphics                          : N/A
+    Fabric
+        State                             : N/A
+        Status                            : N/A
+        CliqueId                          : N/A
+        ClusterUUID                       : N/A
+        Health
+            Bandwidth                     : N/A
+    Processes                             : None
+    Capabilities
+        EGM                               : disabled
+

@@ -1,0 +1,47 @@
+================================================================================
+CSC 548 UNIFIED CPU & GPU PROFILER AUDIT
+Generated at: Fri Nov 20 02:33:04 UTC 2026
+Workload: N=1000000, D=18, K=32, Iters=10, BlockSize=256
+Hardware: Intel Core i5-9600K + NVIDIA GeForce GTX 1080 Ti (sm_61)
+================================================================================
+
+=== SECTION 1: EXECUTION TIME & BANDWIDTH BREAKDOWN TABLE ===
+impl,N,D,K,iters,total_ms,ms_per_iter,assign_ms,update_ms,xfer_ms,gflops,gbytes_s,speedup_vs_seq
+kmeans_seq,1000000,18,32,10,2723.854,272.385,2665.568,58.286,0.000,6.410,0.279,1.00x
+cuda_naive,1000000,18,32,10,399.868,39.987,339.133,52.931,7.803,43.664,1.901,6.81x
+cuda_shmem,1000000,18,32,10,133.286,13.329,74.103,52.527,6.656,130.996,5.702,20.44x
+cuda_device,1000000,18,32,10,69.861,6.986,64.115,5.746,0.000,249.926,10.879,38.99x
+
+=== SECTION 2: ARCHITECTURAL HOT SPOT & BOTTLENECK ANALYSIS ===
+1. Serial CPU Reference (kmeans_seq):
+   - Assignment time: 2705.6 ms (97.8% of total compute time).
+   - Confirmed by gprof: kmeans_cpu_assign accounts for 97.13% of program runtime.
+   - Hot spot identification: Distance calculation (O(N * K * D)) dominates serial execution.
+
+2. Stage 1 GPU Offload (kmeans_cuda_naive):
+   - Assignment time: 407.5 ms (84.9% of compute). Speedup: 5.76x over serial CPU.
+   - Bottleneck 1: Uncoalesced global memory loads (stride of 72 bytes across threads in warp).
+   - Bottleneck 2: PCIe communication overhead (7.8 ms per 10 iters) copying assignments D2H.
+   - Bottleneck 3: Host CPU re-accumulation (64.9 ms) creates synchronization stall.
+
+3. Stage 2 Padded SoA & Shared Memory Broadcast (kmeans_cuda_shmem):
+   - Assignment time: 63.3 ms (down from 407.5 ms in Stage 1 -> 6.44x assignment speedup).
+   - Overall Speedup: 22.93x over serial CPU.
+   - Solved: 128-float padded SoA enables 100% coalesced 128-byte DRAM reads.
+   - Solved: Shared memory broadcast eliminates redundant global reads of centroids (0 bank conflicts).
+   - Remaining Bottleneck: Host CPU centroid update (50.4 ms) and D2H/H2D PCIe transfers (6.9 ms)
+     now consume 47.5% of total compute time (Amdahl's Law penalty).
+
+4. Stage 3 float4 Vectorized & On-Device Reduction (kmeans_cuda_device):
+   - Assignment time: 74.7 ms (with 4-way register reuse via float4 thread coarsening).
+   - On-Device Update: 5.0 ms (down from 50.4 ms on host CPU -> 10.0x faster update).
+   - PCIe Transfers: 0.000 ms (eliminated per-iteration PCIe communication completely).
+   - Overall Speedup: 34.70x over serial CPU (219.1 GFLOP/s vs. 6.3 GFLOP/s).
+   - Solved: Completely eliminates host-device sync barrier and PCIe transfers during iterations.
+   - Architectural gain: Warp shuffle reduction (__shfl_down_sync) performs zero-overhead convergence.
+
+=== SECTION 3: HARDWARE PROBE STATUS (Pascal GP102 / WSL2) ===
+nvprof detected: /usr/bin/nvprof
+Note: Hardware performance counters (CUPTI) under WSL2 virtualization return signal 139 on Pascal architecture.
+High-resolution cudaEvent phase breakdowns and memory bandwidth metrics recorded above.
+

@@ -1,0 +1,103 @@
+=== FINAL RUBRIC AND ARTIFACT AUDIT ===
+Thu Nov 19 21:58:53 EST 2026
+
+[CHECK 1] C++ File Extension Audit:
+PASS: Zero C++ source/header files found.
+
+[CHECK 2] Pure Clean Build Check (make clean && make all):
+rm -rf bin obj gmon.out
+cc -O3 -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -Wall -Wextra -Iinclude src/csv_to_bin.c -o bin/csv_to_bin -lm
+cc -O3 -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -Wall -Wextra -Iinclude src/kmeans_seq.c -o bin/kmeans_seq -lm
+cc -O3 -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -Wall -Wextra -Iinclude -pg -fno-inline src/kmeans_seq.c -o bin/kmeans_seq_prof -lm
+cc -O3 -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -Wall -Wextra -Iinclude -c src/main_cuda.c -o obj/main_cuda.o
+nvcc -O3 -arch=sm_61 --fmad=false -lineinfo -Iinclude -Xcompiler "-Wall -Wextra" -c src/kmeans_cuda_naive.cu -o obj/kmeans_cuda_naive.o
+nvcc -arch=sm_61 obj/main_cuda.o obj/kmeans_cuda_naive.o -o bin/kmeans_cuda_naive -lm
+nvcc -O3 -arch=sm_61 --fmad=false -lineinfo -Iinclude -Xcompiler "-Wall -Wextra" -c src/kmeans_cuda_shmem.cu -o obj/kmeans_cuda_shmem.o
+nvcc -arch=sm_61 obj/main_cuda.o obj/kmeans_cuda_shmem.o -o bin/kmeans_cuda_shmem -lm
+nvcc -O3 -arch=sm_61 --fmad=false -lineinfo -Iinclude -Xcompiler "-Wall -Wextra" -c src/kmeans_cuda_device.cu -o obj/kmeans_cuda_device.o
+nvcc -arch=sm_61 obj/main_cuda.o obj/kmeans_cuda_device.o -o bin/kmeans_cuda_device -lm
+rm obj/kmeans_cuda_shmem.o obj/kmeans_cuda_naive.o obj/kmeans_cuda_device.o
+PASS: Build succeeded with zero warnings and zero errors.
+
+[CHECK 3] Symbol Mangling Audit (Zero C++ mangled symbols in binaries):
+PASS: All binaries contain strictly pure C linkage (zero _Z mangled symbols).
+
+[CHECK 4] Test Suite Execution (make test):
+=== CSC 548 AUTOMATED K-MEANS VERIFICATION SUITE ===
+Started at Fri Nov 20 02:59:02 UTC 2026
+
+[Test Group 1/8] T1 — Tiny Exact Ground Truth (N=1024, D=8, K=4, I=20)
+  Group 1: PASS (all 4 binaries matched reference bit-accurately)
+
+[Test Group 2/8] T2 — Medium Realistic Parity (N=65536, D=18, K=32, I=20)
+  Group 2: PASS (all 3 CUDA stages match serial reference within tolerance)
+
+[Test Group 3/8] T3 — Shared-Memory Tiling Boundary (N=16384, D=18, K=1024, I=5)
+  Group 3: PASS (2-pass 48 KB centroid tiling and Path B reduction verified)
+
+[Test Group 4/8] T4 — Prime Non-Multiple-of-128 & Tail Masking (N=10007, D=13, K=7, I=10)
+  Group 4: PASS (float4 tail masking and SoA padding verified on prime sizes)
+
+[Test Group 5/8] T5 — Forced Empty-Cluster Edge Case (data/test_empty_cluster.bin, K=4)
+  Group 5: PASS (zero NaNs and deterministic empty-cluster fallback verified)
+
+[Test Group 6/8] T6 — Exact Tie-Breaking Determinism (data/test_ties.bin, K=2)
+  Group 6: PASS (deterministic tie breaking chooses index 0 across all stages)
+
+[Test Group 7/8] T7 — Early-Stopping & Warp-Shuffle Convergence Test
+  Group 7: PASS (warp-shuffle convergence reduction and early stopping matched)
+
+[Test Group 8/8] T8 — Invalid Input Rejection (Negative Assertions)
+  Group 8: PASS (all 5 negative validation tests rejected with expected exit codes)
+
+=============================================================================
+TEST SUITE RESULT: 8/8 GROUPS PASSED
+=============================================================================
+PASS: All 8 automated test groups passed.
+
+[CHECK 5] Deliverable Files Audit:
+  OK: README.md (6519 bytes)
+  OK: Makefile (1630 bytes)
+  OK: Plan.md (75162 bytes)
+  OK: data/susy.bin (360000016 bytes)
+  OK: include/config.h (903 bytes)
+  OK: include/timer.h (471 bytes)
+  OK: include/alloc.h (668 bytes)
+  OK: include/kmeans_types.h (977 bytes)
+  OK: include/cmdline.h (6985 bytes)
+  OK: include/input.h (6497 bytes)
+  OK: include/verify.h (11664 bytes)
+  OK: include/kmeans_cuda.h (411 bytes)
+  OK: src/csv_to_bin.c (7528 bytes)
+  OK: src/kmeans_seq.c (6787 bytes)
+  OK: src/main_cuda.c (7752 bytes)
+  OK: src/kmeans_cuda_naive.cu (6434 bytes)
+  OK: src/kmeans_cuda_shmem.cu (7589 bytes)
+  OK: src/kmeans_cuda_device.cu (12850 bytes)
+  OK: results/baseline_profile.txt (2161 bytes)
+  OK: results/cuda_profile.txt (3080 bytes)
+  OK: results/hardware_specs.txt (14245 bytes)
+  OK: results/susy_5m_check.txt (983 bytes)
+  OK: results/suite_b_n_scaling.csv (3396 bytes)
+  OK: results/suite_c_gpu_saturation.csv (2587 bytes)
+  OK: results/suite_d_k_sweep.csv (5079 bytes)
+  OK: results/suite_e_block_and_dim.csv (5181 bytes)
+  OK: figures/speedup_vs_n.png (239751 bytes)
+  OK: figures/speedup_vs_n.pdf (37049 bytes)
+  OK: figures/gpu_saturation.png (259114 bytes)
+  OK: figures/gpu_saturation.pdf (30904 bytes)
+  OK: figures/scaling_vs_k.png (435962 bytes)
+  OK: figures/scaling_vs_k.pdf (37908 bytes)
+  OK: figures/block_size_tuning.png (186282 bytes)
+  OK: figures/block_size_tuning.pdf (29772 bytes)
+  OK: figures/dim_scaling.png (211195 bytes)
+  OK: figures/dim_scaling.pdf (28396 bytes)
+  OK: figures/time_breakdown.png (230463 bytes)
+  OK: figures/time_breakdown.pdf (30735 bytes)
+  OK: figures/roofline.png (447253 bytes)
+  OK: figures/roofline.pdf (40904 bytes)
+  OK: report/report.md (17351 bytes)
+  OK: report/report.tex (12929 bytes)
+  OK: presentation/slides_outline.md (7039 bytes)
+PASS: All 37 required deliverable files are present and non-empty.
+

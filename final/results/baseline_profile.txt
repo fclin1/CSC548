@@ -1,0 +1,44 @@
+=== SERIAL BASELINE RUN (N=1,000,000, D=18, K=32, I=10) ===
+================================================================================
+K-Means Serial Baseline (kmeans_seq)
+Dataset: data/susy.bin | N: 1000000 | D: 18 | K: 32 | Iters: 10 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:              285.028 ms
+  Setup Time:              3.075 ms
+  Assignment Time:      2667.929 ms (97.9% of compute)
+  Update Time:            57.574 ms (2.1% of compute)
+  Total Compute:        2725.503 ms
+  Per-Iteration:         272.550 ms
+Throughput:
+  Compute Rate:            6.406 GFLOP/s
+  Effective Bandwidth:     0.279 GB/s
+================================================================================
+
+=== GPROF PROFILING RUN ===
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 97.13      5.42     5.42       20     0.27     0.27  kmeans_cpu_assign
+  2.15      5.54     0.12       20     0.01     0.01  kmeans_cpu_update
+  0.72      5.58     0.04        1     0.04     0.04  validate_dataset
+  0.00      5.58     0.00       84     0.00     0.00  wall_seconds
+  0.00      5.58     0.00       32     0.00     0.00  rng_next_u64
+  0.00      5.58     0.00        3     0.00     0.00  aligned_alloc_64
+  0.00      5.58     0.00        3     0.00     0.00  aligned_free_64
+  0.00      5.58     0.00        3     0.00     0.00  median_double
+  0.00      5.58     0.00        2     0.00     2.77  kmeans_cpu_reference
+  0.00      5.58     0.00        2     0.00     0.00  verify_kmeans_outputs
+  0.00      5.58     0.00        1     0.00     0.00  init_centroids_deterministic
+  0.00      5.58     0.00        1     0.00     0.00  init_default_config
+  0.00      5.58     0.00        1     0.00     0.00  parse_args
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+

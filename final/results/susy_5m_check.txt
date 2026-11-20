@@ -1,0 +1,22 @@
+================================================================================
+K-Means CUDA Stage: cuda_device
+Dataset: data/susy.bin | N: 5000000 | D: 18 | K: 32 | Block: 256 | Iters: 20 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:             1538.864 ms
+  Setup Time (H2D):      537.426 ms
+  Assignment (Kernel):   779.222 ms (94.6% of compute)
+  Update (Host/Dev):      44.307 ms (5.4% of compute)
+  Transfers (PCIe):        0.000 ms (0.0% of compute)
+  Total Compute:         823.530 ms
+  Per-Iteration:          41.176 ms
+Throughput:
+  Compute Rate:          212.014 GFLOP/s
+  Effective Bandwidth:     9.229 GB/s
+Verification:
+  Status:             PASS
+  Centroid Rel L2:    3.029979e-05 (tol: <= 1.0e-04)
+  Centroid Max Abs:   1.953840e-04
+  Label Match:           99.9936% (min: >= 99.99%)
+================================================================================

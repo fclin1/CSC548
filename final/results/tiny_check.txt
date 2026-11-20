@@ -1,0 +1,87 @@
+================================================================================
+K-Means Serial Baseline (kmeans_seq)
+Dataset: synthetic | N: 1024 | D: 8 | K: 4 | Iters: 20 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:                0.172 ms
+  Setup Time:              0.003 ms
+  Assignment Time:         0.267 ms (85.5% of compute)
+  Update Time:             0.045 ms (14.5% of compute)
+  Total Compute:           0.312 ms
+  Per-Iteration:           0.016 ms
+Throughput:
+  Compute Rate:            6.831 GFLOP/s
+  Effective Bandwidth:     2.372 GB/s
+Verification:
+  Status:             PASS
+  Centroid Rel L2:    0.000000e+00 (tol: <= 1.0e-04)
+  Centroid Max Abs:   0.000000e+00
+  Label Match:          100.0000% (min: >= 99.99%)
+================================================================================
+================================================================================
+K-Means CUDA Stage: cuda_naive
+Dataset: synthetic | N: 1024 | D: 8 | K: 4 | Block: 256 | Iters: 20 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:                0.195 ms
+  Setup Time (H2D):        0.509 ms
+  Assignment (Kernel):     0.184 ms (10.0% of compute)
+  Update (Host/Dev):       0.054 ms (2.9% of compute)
+  Transfers (PCIe):        1.612 ms (87.1% of compute)
+  Total Compute:           1.850 ms
+  Per-Iteration:           0.092 ms
+Throughput:
+  Compute Rate:            1.152 GFLOP/s
+  Effective Bandwidth:     0.400 GB/s
+Verification:
+  Status:             PASS
+  Centroid Rel L2:    0.000000e+00 (tol: <= 1.0e-04)
+  Centroid Max Abs:   0.000000e+00
+  Label Match:          100.0000% (min: >= 99.99%)
+================================================================================
+================================================================================
+K-Means CUDA Stage: cuda_shmem
+Dataset: synthetic | N: 1024 | D: 8 | K: 4 | Block: 256 | Iters: 20 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:                0.158 ms
+  Setup Time (H2D):        2.128 ms
+  Assignment (Kernel):     0.227 ms (14.2% of compute)
+  Update (Host/Dev):       0.055 ms (3.4% of compute)
+  Transfers (PCIe):        1.321 ms (82.4% of compute)
+  Total Compute:           1.603 ms
+  Per-Iteration:           0.080 ms
+Throughput:
+  Compute Rate:            1.329 GFLOP/s
+  Effective Bandwidth:     0.462 GB/s
+Verification:
+  Status:             PASS
+  Centroid Rel L2:    0.000000e+00 (tol: <= 1.0e-04)
+  Centroid Max Abs:   0.000000e+00
+  Label Match:          100.0000% (min: >= 99.99%)
+================================================================================
+================================================================================
+K-Means CUDA Stage: cuda_device
+Dataset: synthetic | N: 1024 | D: 8 | K: 4 | Block: 256 | Iters: 20 (Fixed: yes)
+Trials: 1 (Warmup: 1)
+--------------------------------------------------------------------------------
+Timing Breakdown:
+  I/O Time:                0.166 ms
+  Setup Time (H2D):        2.009 ms
+  Assignment (Kernel):     1.658 ms (28.3% of compute)
+  Update (Host/Dev):       4.205 ms (71.7% of compute)
+  Transfers (PCIe):        0.000 ms (0.0% of compute)
+  Total Compute:           5.863 ms
+  Per-Iteration:           0.293 ms
+Throughput:
+  Compute Rate:            0.363 GFLOP/s
+  Effective Bandwidth:     0.126 GB/s
+Verification:
+  Status:             PASS
+  Centroid Rel L2:    2.934503e-07 (tol: <= 1.0e-04)
+  Centroid Max Abs:   4.768372e-06
+  Label Match:          100.0000% (min: >= 99.99%)
+================================================================================

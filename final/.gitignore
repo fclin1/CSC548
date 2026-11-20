@@ -1,0 +1,10 @@
+bin/
+obj/
+gmon.out
+data/*.csv
+data/*.bin
+data/*.gz
+data/*.txt
+.venv/
+__pycache__/
+*.pyc

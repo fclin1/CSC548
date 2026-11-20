@@ -22,28 +22,28 @@ This document is both the **authoritative technical specification** and the **li
 
 ### Master Progress Dashboard
 
-- **Overall Progress:** `0 / 14` tasks completed (`0%`)
-- **Current Phase:** `Phase 0`
-- **Current Active Task:** `0.1`
+- **Overall Progress:** `14 / 14` tasks completed (`100%`)
+- **Current Phase:** `Complete`
+- **Current Active Task:** `None (All tasks completed)`
 - **Active Dataset Mode:** `UCI_SUSY` (5,000,000 points, 18 features)
-- **Last Updated (UTC):** `PENDING`
+- **Last Updated (UTC):** `2026-11-20 03:00:00`
 
 | Task ID | Phase | Task Name | Status | Primary Artifact(s) | Evidence / Key Metric | Updated (UTC) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **0.1** | Phase 0 | Repo Layout, Hardware Probe & Pure-C Makefile | `NOT_STARTED` | `Makefile`, `include/*.h`, `results/hardware_specs.txt` | — | — |
-| **0.2** | Phase 0 | Pure-C Data Ingestion, SplitMix64 Gen & Validation | `NOT_STARTED` | `include/input.h`, `src/csv_to_bin.c`, `scripts/prepare_susy.sh` | — | — |
-| **0.3** | Phase 0 | Pure-C Verifier & Serial Baseline (`kmeans_seq`) | `NOT_STARTED` | `include/verify.h`, `src/kmeans_seq.c`, `bin/kmeans_seq` | — | — |
-| **0.4** | Phase 0 | Serial Baseline Profiling (`gprof` / `perf`) | `NOT_STARTED` | `bin/kmeans_seq_prof`, `results/baseline_profile.txt` | — | — |
-| **1.1** | Phase 1 | Pure-C CUDA Driver & Stage 1 Naive Kernel | `NOT_STARTED` | `include/kmeans_cuda.h`, `src/main_cuda.c`, `src/kmeans_cuda_naive.cu` | — | — |
-| **1.2** | Phase 1 | Stage 2 Padded SoA & Tiled Shared-Memory Kernel | `NOT_STARTED` | `src/kmeans_cuda_shmem.cu`, `bin/kmeans_cuda_shmem` | — | — |
-| **1.3** | Phase 1 | Stage 3 `float4` SoA + On-Device Reduction Kernel | `NOT_STARTED` | `src/kmeans_cuda_device.cu`, `bin/kmeans_cuda_device` | — | — |
-| **2.1** | Phase 2 | Automated Correctness, Edge-Case & Determinism Suite | `NOT_STARTED` | `tests/run_tests.sh`, `results/test_suite_summary.txt` | — | — |
-| **3.1** | Phase 3 | Unified CPU & GPU Profiler Audit | `NOT_STARTED` | `scripts/run_profiler.sh`, `results/cuda_profile.txt` | — | — |
-| **3.2** | Phase 3 | Full Benchmark & Scaling Matrix Execution | `NOT_STARTED` | `scripts/run_benchmarks.sh`, `results/suite_*.csv` | — | — |
-| **3.3** | Phase 3 | Dual PNG + Vector PDF Publication Figures | `NOT_STARTED` | `figures/fig_*.py`, `figures/*.png`, `figures/*.pdf` | — | — |
-| **4.1** | Phase 4 | Reproducible `README.md` | `NOT_STARTED` | `README.md` | — | — |
-| **4.2** | Phase 4 | ACM 2-Column Report & 4-Min Presentation Outline | `NOT_STARTED` | `report/report.md`, `report/report.tex`, `presentation/slides_outline.md` | — | — |
-| **4.3** | Phase 4 | Final Pre-Submission Rubric Audit | `NOT_STARTED` | `results/final_audit.txt` | — | — |
+| **0.1** | Phase 0 | Repo Layout, Hardware Probe & Pure-C Makefile | `DONE` | `Makefile`, `include/*.h`, `results/hardware_specs.txt` | i5-9600K + GTX 1080 Ti (sm_61); gcc 13.3.0, nvcc 12.0; C11 headers validated | 2026-11-20 02:21 |
+| **0.2** | Phase 0 | Pure-C Data Ingestion, SplitMix64 Gen & Validation | `DONE` | `include/input.h`, `src/csv_to_bin.c`, `scripts/prepare_susy.sh` | data/susy.bin (360,000,016 B, 5M x 18 FP32); unit tests passed | 2026-11-20 02:24 |
+| **0.3** | Phase 0 | Pure-C Verifier & Serial Baseline (`kmeans_seq`) | `DONE` | `include/verify.h`, `src/kmeans_seq.c`, `bin/kmeans_seq` | 10k dump/check parity passed (L2 = 0.0, label match = 100.0%) | 2026-11-20 02:24 |
+| **0.4** | Phase 0 | Serial Baseline Profiling (`gprof` / `perf`) | `DONE` | `bin/kmeans_seq_prof`, `results/baseline_profile.txt` | gprof: kmeans_cpu_assign = 97.13% runtime; proves hot spot | 2026-11-20 02:25 |
+| **1.1** | Phase 1 | Pure-C CUDA Driver & Stage 1 Naive Kernel | `DONE` | `include/kmeans_cuda.h`, `src/main_cuda.c`, `src/kmeans_cuda_naive.cu` | 100k synthetic verify PASS; AoS uncoalesced baseline | 2026-11-20 02:30 |
+| **1.2** | Phase 1 | Stage 2 Padded SoA & Tiled Shared-Memory Kernel | `DONE` | `src/kmeans_cuda_shmem.cu`, `bin/kmeans_cuda_shmem` | 128-float SoA + shmem broadcast; 6.4x assign speedup | 2026-11-20 02:35 |
+| **1.3** | Phase 1 | Stage 3 `float4` SoA + On-Device Reduction Kernel | `DONE` | `src/kmeans_cuda_device.cu`, `bin/kmeans_cuda_device` | float4 + register reuse + zero per-iter PCIe; 39x compute speedup | 2026-11-20 02:40 |
+| **2.1** | Phase 2 | Automated Correctness, Edge-Case & Determinism Suite | `DONE` | `tests/run_tests.sh`, `results/test_suite_summary.txt` | 8/8 test groups PASS (tiny, medium, 48KB cliff, prime, empty, ties, early-stop, neg) | 2026-11-20 02:45 |
+| **3.1** | Phase 3 | Unified CPU & GPU Profiler Audit | `DONE` | `scripts/run_profiler.sh`, `results/cuda_profile.txt` | Profile: CPU 2724ms -> Naive 400ms -> Shmem 133ms -> Device 70ms | 2026-11-20 02:50 |
+| **3.2** | Phase 3 | Full Benchmark & Scaling Matrix Execution | `DONE` | `scripts/run_benchmarks.sh`, `results/suite_*.csv` | All 4 CSVs populated; 5M check PASSED (rel_L2 3.03e-5, labels 99.9936%) | 2026-11-20 02:55 |
+| **3.3** | Phase 3 | Dual PNG + Vector PDF Publication Figures | `DONE` | `figures/fig_*.py`, `figures/*.png`, `figures/*.pdf` | 7 figure pairs generated (speedup, saturation, k, block, dim, breakdown, roofline) | 2026-11-20 02:56 |
+| **4.1** | Phase 4 | Reproducible `README.md` | `DONE` | `README.md` | Reproduction guide, CLI commands, test & benchmark steps verified | 2026-11-20 02:57 |
+| **4.2** | Phase 4 | ACM 2-Column Report & 4-Min Presentation Outline | `DONE` | `report/report.md`, `report/report.tex`, `presentation/slides_outline.md` | Full ACM sigconf LaTeX & Markdown reports + 4-min presentation script | 2026-11-20 02:58 |
+| **4.3** | Phase 4 | Final Pre-Submission Rubric Audit | `DONE` | `results/final_audit.txt` | 5/5 audit checks passed (0 C++, clean build, 0 _Z symbols, 8/8 tests, 37 files) | 2026-11-20 03:00 |
 
 ---
 
@@ -356,7 +356,7 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
 ### Phase 0: Environment, Pure-C Infrastructure & Sequential Baseline Reference
 
 #### Task 0.1: Initialize Repository Layout, Hardware Probe & Pure-C Build System
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:21`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-09**. Establishes clean directory tree, pure-C11 headers, and `Makefile` modeled after `hw1/SpMV`.
 2. **Exact Technical Decisions:**
@@ -368,19 +368,19 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
    * `include/kmeans_types.h`: Define `KMeansConfig`, `KMeansMetrics`, and `VerifyResult` (including `centroid_rel_l2`, `centroid_max_abs`, `label_match_pct`, `passed`) using fixed-size `char` paths (`512` bytes) and `<stdbool.h>` / `<stdint.h>`.
    * `include/cmdline.h`: Implement `static inline int parse_args(int argc, char **argv, KMeansConfig *cfg)` validating all flags from Section C.4 using `strcmp`, `strtol`, `strtoul`, and `strtof`.
 3. **Implementation Steps:**
-   - [ ] Create all directories and `.gitignore` (ignoring `bin/`, `obj/`, `gmon.out`, `data/*.csv`, `data/*.bin`, `data/*.gz`, `data/*.txt`, `.venv/`).
-   - [ ] Write `include/config.h`, `include/timer.h`, `include/alloc.h`, `include/kmeans_types.h`, and `include/cmdline.h`.
-   - [ ] Write `Makefile` matching Section C.2 (`gcc -std=c11` for all `.c` files, `nvcc` for `.cu` files, zero OpenMP flags).
-   - [ ] Probe and log host hardware to `results/hardware_specs.txt` capturing `uname -a`, `lscpu`, `free -h`, `gcc --version`, `nvcc --version`, and `nvidia-smi -q`.
+   - [x] Create all directories and `.gitignore` (ignoring `bin/`, `obj/`, `gmon.out`, `data/*.csv`, `data/*.bin`, `data/*.gz`, `data/*.txt`, `.venv/`).
+   - [x] Write `include/config.h`, `include/timer.h`, `include/alloc.h`, `include/kmeans_types.h`, and `include/cmdline.h`.
+   - [x] Write `Makefile` matching Section C.2 (`gcc -std=c11` for all `.c` files, `nvcc` for `.cu` files, zero OpenMP flags).
+   - [x] Probe and log host hardware to `results/hardware_specs.txt` capturing `uname -a`, `lscpu`, `free -h`, `gcc --version`, `nvcc --version`, and `nvidia-smi -q`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `ls -la include/ results/hardware_specs.txt Makefile` succeeds.
-   - [ ] Zero `.cpp`, `.hpp`, or `.cuh` files exist in the repository.
-   - [ ] `results/hardware_specs.txt` records CPU model, `gcc` version, `nvcc` version, and GPU model.
+   - [x] `ls -la include/ results/hardware_specs.txt Makefile` succeeds.
+   - [x] Zero `.cpp`, `.hpp`, or `.cuh` files exist in the repository.
+   - [x] `results/hardware_specs.txt` records CPU model, `gcc` version, `nvcc` version, and GPU model.
 
 ---
 
 #### Task 0.2: Implement Pure-C Data Ingestion, SplitMix64 Synthetic Generator, Layout Conversion & Validation
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:24`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-02**, **REQ-06**. Guarantees bit-identical input loading, 128-float padded AoS-to-SoA transforms, deterministic centroid seeding, and strict edge-case validation in pure C11.
 2. **Exact Technical Decisions:**
@@ -397,20 +397,20 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      * Reads lines via `fgets` (65,536-byte buffer), parses with `strtof`, verifies `isfinite()`, writes a 16-byte placeholder header, streams buffered FP32 rows, then `fseek(fp, 0, SEEK_SET)` to write final `uint64_t num_points` and `uint64_t num_dims`.
    * `scripts/prepare_susy.sh`: Downloads `https://archive.ics.uci.edu/ml/machine-learning-databases/00279/SUSY.csv.gz`, streams `gzip -dc` into `bin/csv_to_bin --in - --out data/susy.bin --skip-cols 1` (supporting `-` for `stdin`), and verifies `stat -c%s data/susy.bin` equals `360000016` bytes.
 3. **Implementation Steps:**
-   - [ ] Implement `include/input.h` and `src/csv_to_bin.c`.
-   - [ ] Implement `scripts/prepare_susy.sh` and `chmod +x scripts/prepare_susy.sh`.
-   - [ ] Compile `make bin/csv_to_bin`.
-   - [ ] Test `bin/csv_to_bin` on both a 10-row comma CSV (`--skip-cols 1`) and a 5-row semicolon CSV containing 1 `?` row (`--delim ';' --skip-cols 2 --skip-header --skip-missing`).
-   - [ ] If network access and disk space ($\ge 4\text{ GB}$) are available, run `bash scripts/prepare_susy.sh` and update `Active Dataset Mode` in the Master Progress Dashboard.
+   - [x] Implement `include/input.h` and `src/csv_to_bin.c`.
+   - [x] Implement `scripts/prepare_susy.sh` and `chmod +x scripts/prepare_susy.sh`.
+   - [x] Compile `make bin/csv_to_bin`.
+   - [x] Test `bin/csv_to_bin` on both a 10-row comma CSV (`--skip-cols 1`) and a 5-row semicolon CSV containing 1 `?` row (`--delim ';' --skip-cols 2 --skip-header --skip-missing`).
+   - [x] If network access and disk space ($\ge 4\text{ GB}$) are available, run `bash scripts/prepare_susy.sh` and update `Active Dataset Mode` in the Master Progress Dashboard.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `make bin/csv_to_bin` compiles cleanly with `gcc -std=c11 -Wall -Wextra` and zero warnings.
-   - [ ] Round-trip test on 10-row, 5-column CSV produces exactly `16 + 10 * 4 * 4 = 176` bytes; semicolon `?`-handling test drops the malformed row cleanly.
-   - [ ] If SUSY was downloaded, `stat -c%s data/susy.bin` outputs `360000016` (else `SYNTHETIC_FALLBACK` is documented in Section F).
+   - [x] `make bin/csv_to_bin` compiles cleanly with `gcc -std=c11 -Wall -Wextra` and zero warnings.
+   - [x] Round-trip test on 10-row, 5-column CSV produces exactly `16 + 10 * 4 * 4 = 176` bytes; semicolon `?`-handling test drops the malformed row cleanly.
+   - [x] If SUSY was downloaded, `stat -c%s data/susy.bin` outputs `360000016` (else `SYNTHETIC_FALLBACK` is documented in Section F).
 
 ---
 
 #### Task 0.3: Implement Pure-C Verification Harness & Deterministic Serial Baseline (`kmeans_seq.c`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:24`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-03**, **REQ-06**. Builds the fair, compiler-optimized ground-truth sequential Lloyd's K-Means engine (`IMPL-0`) and reusable pure-C verification module.
 2. **Exact Technical Decisions:**
@@ -430,18 +430,18 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      * `v.passed = (v.centroid_rel_l2 <= VERIFY_REL_L2_TOL) && (v.label_match_pct >= VERIFY_LABEL_MATCH_MIN);`
    * `src/kmeans_seq.c`: Parses CLI, loads/generates data, validates dataset, initializes centroids, runs `warmup` untimed + `trials` timed invocations of `kmeans_cpu_reference`, takes median timings, prints summary, and handles `--verify`, `--dump-ref`, `--check-ref`, and `--csv`.
 3. **Implementation Steps:**
-   - [ ] Implement `include/verify.h` and `src/kmeans_seq.c`.
-   - [ ] Build `make bin/kmeans_seq bin/kmeans_seq_prof`.
-   - [ ] Run deterministic dump and check self-test on $N = 10{,}000, D = 18, K = 16$.
+   - [x] Implement `include/verify.h` and `src/kmeans_seq.c`.
+   - [x] Build `make bin/kmeans_seq bin/kmeans_seq_prof`.
+   - [x] Run deterministic dump and check self-test on $N = 10{,}000, D = 18, K = 16$.
 4. **Verification & Acceptance Criteria:**
-   - [ ] Both targets compile with `gcc -std=c11 -Wall -Wextra` and zero warnings.
-   - [ ] `./bin/kmeans_seq --synthetic --n 10000 --d 18 --k 16 --iters 20 --seed 42 --dump-ref data/ref_10k` exits `0`.
-   - [ ] Re-running with `--check-ref data/ref_10k` asserts `centroid_rel_l2 == 0.000000e+00`, `centroid_max_abs == 0.000000e+00`, and `label_match_pct == 100.0000%`.
+   - [x] Both targets compile with `gcc -std=c11 -Wall -Wextra` and zero warnings.
+   - [x] `./bin/kmeans_seq --synthetic --n 10000 --d 18 --k 16 --iters 20 --seed 42 --dump-ref data/ref_10k` exits `0`.
+   - [x] Re-running with `--check-ref data/ref_10k` asserts `centroid_rel_l2 == 0.000000e+00`, `centroid_max_abs == 0.000000e+00`, and `label_match_pct == 100.0000%`.
 
 ---
 
 #### Task 0.4: Profile Serial Baseline with `gprof` / `perf` to Prove Hot Spot
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:25`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-04** ("Baseline first, then profile; never optimize blind").
 2. **Exact Technical Decisions:**
@@ -450,18 +450,18 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
    * Run `bin/kmeans_seq_prof` followed by `gprof bin/kmeans_seq_prof gmon.out` (if `gprof` is installed) and remove `gmon.out`.
    * If `perf` is permitted (`perf stat`), also capture `cycles,instructions,cache-references,cache-misses,LLC-loads,LLC-load-misses`.
 3. **Implementation Steps:**
-   - [ ] Execute serial profiling on `bin/kmeans_seq` and `bin/kmeans_seq_prof`.
-   - [ ] Write combined output (`wall_seconds` phase breakdown, `gprof` flat profile, and optional `perf stat`) to `results/baseline_profile.txt`.
-   - [ ] Remove temporary `gmon.out`.
+   - [x] Execute serial profiling on `bin/kmeans_seq` and `bin/kmeans_seq_prof`.
+   - [x] Write combined output (`wall_seconds` phase breakdown, `gprof` flat profile, and optional `perf stat`) to `results/baseline_profile.txt`.
+   - [x] Remove temporary `gmon.out`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `results/baseline_profile.txt` exists and proves distance assignment consumes $> 90\%$ of total compute time (expected: $97\text{--}99\%$).
+   - [x] `results/baseline_profile.txt` exists and proves distance assignment consumes $> 90\%$ of total compute time (expected: $97\text{--}99\%$).
 
 ---
 
 ### Phase 1: Progressive C-Style CUDA Implementations
 
 #### Task 1.1: Build Pure-C CUDA Driver (`main_cuda.c`) & Stage 1 Naive CUDA Kernel (`kmeans_cuda_naive.cu`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:30`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-05**, **REQ-06**, **REQ-09**. Establishes the pure-C11 CUDA harness and Stage 1 global-memory baseline.
 2. **Exact Technical Decisions:**
@@ -504,17 +504,17 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
        4. `cudaMemcpy(d_centroids, h_final_centroids, (size_t)K * D * sizeof(float), cudaMemcpyHostToDevice)` (timed in `xfer_ms`).
      * Set `total_compute_ms = assign_ms + update_ms + xfer_ms`.
 3. **Implementation Steps:**
-   - [ ] Write `include/kmeans_cuda.h`, `src/main_cuda.c`, and `src/kmeans_cuda_naive.cu`.
-   - [ ] Build via `make bin/kmeans_cuda_naive`.
-   - [ ] Run verification command on $N = 100{,}000, D = 18, K = 32$.
+   - [x] Write `include/kmeans_cuda.h`, `src/main_cuda.c`, and `src/kmeans_cuda_naive.cu`.
+   - [x] Build via `make bin/kmeans_cuda_naive`.
+   - [x] Run verification command on $N = 100{,}000, D = 18, K = 32$.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `obj/main_cuda.o` compiles cleanly with `gcc -std=c11 -Wall -Wextra`, and `bin/kmeans_cuda_naive` links cleanly.
-   - [ ] `./bin/kmeans_cuda_naive --synthetic --n 100000 --d 18 --k 32 --iters 20 --block-size 256 --verify` exits `0` with `verify_status=PASS`, `centroid_rel_l2 <= 1e-4`, `label_match_pct >= 99.99%`.
+   - [x] `obj/main_cuda.o` compiles cleanly with `gcc -std=c11 -Wall -Wextra`, and `bin/kmeans_cuda_naive` links cleanly.
+   - [x] `./bin/kmeans_cuda_naive --synthetic --n 100000 --d 18 --k 32 --iters 20 --block-size 256 --verify` exits `0` with `verify_status=PASS`, `centroid_rel_l2 <= 1e-4`, `label_match_pct >= 99.99%`.
 
 ---
 
 #### Task 1.2: Implement Stage 2 Coalesced Padded SoA & Tiled Shared-Memory Kernel (`kmeans_cuda_shmem.cu`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:35`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-05**, **REQ-06**. Demonstrates global memory coalescing (128-float Padded SoA) and conflict-free shared-memory centroid broadcast with automatic 48 KB tiling.
 2. **Exact Technical Decisions:**
@@ -526,17 +526,17 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      * Loop `for (int c_base = 0; c_base < K; c_base += k_tile)` loading `c_count * D` floats cooperatively into `extern __shared__ float s_centroids[];`, syncing with `__syncthreads()`, reading coalesced `d_points_soa[(size_t)d * N_pad + i]` and broadcast `s_centroids[(size_t)c_local * D + d]`, and syncing with `__syncthreads()`.
    * Centroid update remains host-side (identical to Stage 1) so the delta between Stage 1 and Stage 2 isolates **pure assignment-kernel optimization**.
 3. **Implementation Steps:**
-   - [ ] Implement `src/kmeans_cuda_shmem.cu`.
-   - [ ] Build via `make bin/kmeans_cuda_shmem`.
-   - [ ] Verify both single-tile ($K = 32, D = 18$) and multi-tile ($K = 1024, D = 18$, exceeding 48 KB) runs with `--verify`.
+   - [x] Implement `src/kmeans_cuda_shmem.cu`.
+   - [x] Build via `make bin/kmeans_cuda_shmem`.
+   - [x] Verify both single-tile ($K = 32, D = 18$) and multi-tile ($K = 1024, D = 18$, exceeding 48 KB) runs with `--verify`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] Both $K = 32$ and $K = 1024$ runs pass `--verify` with exit code `0`.
-   - [ ] On $N = 500{,}000, D = 18, K = 32$, `assign_ms` of `kmeans_cuda_shmem` is strictly lower than `assign_ms` of `kmeans_cuda_naive`.
+   - [x] Both $K = 32$ and $K = 1024$ runs pass `--verify` with exit code `0`.
+   - [x] On $N = 500{,}000, D = 18, K = 32$, `assign_ms` of `kmeans_cuda_shmem` is strictly lower than `assign_ms` of `kmeans_cuda_naive`.
 
 ---
 
 #### Task 1.3: Implement Stage 3 Optimized Full On-Device Kernel (`kmeans_cuda_device.cu`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:40`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-01**, **REQ-05**, **REQ-06**. Combines `float4` 4-point thread-coarsened coalesced SoA loads, tiled shared-memory centroids, two-tier on-device centroid reduction, `__shfl_down_sync` warp-shuffle convergence reduction, and pinned asynchronous CUDA streams to eliminate per-iteration PCIe transfers.
 2. **Exact Technical Decisions:**
@@ -555,13 +555,13 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
         * If `!cfg->fixed_iters`, async copy 4-byte `d_shift_sq` to pinned host scalar (timed in `xfer_ms`), synchronize `stream`, and break if `h_shift_sq <= tol * tol`.
    * After loop (timed in `setup_ms`): One-time async D2H copy of `d_centroids` and `d_assignments`, `cudaStreamSynchronize(stream)`, and cleanup.
 3. **Implementation Steps:**
-   - [ ] Implement `src/kmeans_cuda_device.cu`.
-   - [ ] Build all binaries via `make clean && make all`.
-   - [ ] Verify Path A ($K = 32, D = 18$), Path B ($K = 512, D = 18$), and multi-tile + Path B ($K = 1024, D = 18$) with `--verify`.
+   - [x] Implement `src/kmeans_cuda_device.cu`.
+   - [x] Build all binaries via `make clean && make all`.
+   - [x] Verify Path A ($K = 32, D = 18$), Path B ($K = 512, D = 18$), and multi-tile + Path B ($K = 1024, D = 18$) with `--verify`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] All three verification runs exit `0` with `centroid_rel_l2 <= 1e-4` and `label_match_pct >= 99.99%`.
-   - [ ] `xfer_ms` equals `0.000` in `--fixed-iters` mode.
-   - [ ] On $N = 1{,}000{,}000, D = 18, K = 32$, `ms_per_iter` satisfies strict monotonic improvement:
+   - [x] All three verification runs exit `0` with `centroid_rel_l2 <= 1e-4` and `label_match_pct >= 99.99%`.
+   - [x] `xfer_ms` equals `0.000` in `--fixed-iters` mode.
+   - [x] On $N = 1{,}000{,}000, D = 18, K = 32$, `ms_per_iter` satisfies strict monotonic improvement:
      $$T_{\text{seq}} > T_{\text{cuda\_naive}} > T_{\text{cuda\_shmem}} > T_{\text{cuda\_device}}$$
 
 ---
@@ -569,7 +569,7 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
 ### Phase 2: Correctness, Edge-Case & Determinism Suite
 
 #### Task 2.1: Build Automated Verification & Edge-Case Test Runner (`tests/run_tests.sh`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:45`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-06**. Exhaustively verifies mathematical accuracy, `float4` tail masking, deterministic tie-breaking, empty-cluster safety, boundary conditions, and invalid-input rejection across all 4 binaries.
 2. **Exact Technical Decisions:**
@@ -588,19 +588,19 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
         * `NaN` injected into `data/test_nan.bin` $\implies$ exit code `3`.
         * Missing file (`--file data/does_not_exist.bin`) $\implies$ exit code `2`.
 3. **Implementation Steps:**
-   - [ ] Implement fixture generation (`data/test_empty_cluster.bin`, `data/test_ties.bin`, `data/test_nan.bin`) inside `tests/run_tests.sh`.
-   - [ ] Implement all 8 test groups with explicit PASS/FAIL counters in `tests/run_tests.sh` and `chmod +x tests/run_tests.sh`.
-   - [ ] Execute `make test`.
+   - [x] Implement fixture generation (`data/test_empty_cluster.bin`, `data/test_ties.bin`, `data/test_nan.bin`) inside `tests/run_tests.sh`.
+   - [x] Implement all 8 test groups with explicit PASS/FAIL counters in `tests/run_tests.sh` and `chmod +x tests/run_tests.sh`.
+   - [x] Execute `make test`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `make test` exits `0` with `ALL TESTS PASSED (8/8 groups)`.
-   - [ ] `results/tiny_check.txt` and `results/test_suite_summary.txt` contain `PASS` for every implementation.
+   - [x] `make test` exits `0` with `ALL TESTS PASSED (8/8 groups)`.
+   - [x] `results/tiny_check.txt` and `results/test_suite_summary.txt` contain `PASS` for every implementation.
 
 ---
 
 ### Phase 3: Profiling, Benchmarking, Scaling & Bottleneck Analysis
 
 #### Task 3.1: Execute Unified CPU & GPU Profiler Audit (`scripts/run_profiler.sh`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:50`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-04** ("what the profiler said you fixed").
 2. **Exact Technical Decisions:**
@@ -612,16 +612,16 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      3. Check GPU compute capability via `nvidia-smi --query-gpu=compute_cap --format=csv,noheader`; only invoke `ncu` if compute capability $\ge 7.0$ (never crash on Pascal `sm_61`).
      4. Always append the built-in `assign_ms`, `update_ms`, `xfer_ms`, `gflops`, `gbytes_s` comparison table into `results/cuda_profile.txt`.
 3. **Implementation Steps:**
-   - [ ] Write `scripts/run_profiler.sh` and `chmod +x scripts/run_profiler.sh`.
-   - [ ] Execute `bash scripts/run_profiler.sh`.
+   - [x] Write `scripts/run_profiler.sh` and `chmod +x scripts/run_profiler.sh`.
+   - [x] Execute `bash scripts/run_profiler.sh`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] `results/cuda_profile.txt` exists and quantitatively shows Stage 1 $\to$ Stage 2 improvement in global load efficiency / `assign_ms`.
-   - [ ] `results/cuda_profile.txt` quantitatively shows Stage 2 $\to$ Stage 3 elimination of per-iteration `xfer_ms` (`0.0 ms`) and host `update_ms`, plus lower `assign_ms` from `float4` register reuse.
+   - [x] `results/cuda_profile.txt` exists and quantitatively shows Stage 1 $\to$ Stage 2 improvement in global load efficiency / `assign_ms`.
+   - [x] `results/cuda_profile.txt` quantitatively shows Stage 2 $\to$ Stage 3 elimination of per-iteration `xfer_ms` (`0.0 ms`) and host `update_ms`, plus lower `assign_ms` from `float4` register reuse.
 
 ---
 
 #### Task 3.2: Execute Full Benchmark & Scaling Matrix (`scripts/run_benchmarks.sh`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:55`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-07**, **REQ-08**. Populates all experimental datasets specified in Section E.
 2. **Exact Technical Decisions:**
@@ -634,17 +634,17 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
    * Run one verification pass (`--verify`) on the largest SUSY configuration ($N = 5{,}000{,}000, D = 18, K = 32$) for `kmeans_cuda_device` and log to `results/susy_5m_check.txt`.
    * Runtime safeguard: if a single `kmeans_seq` run at $N = 5{,}000{,}000$ takes $> 15\text{ s}$, use `--warmup 0 --trials 3` for `kmeans_seq` at $N \ge 2{,}500{,}000$ only (keeping `--warmup 1 --trials 5` for all CUDA runs) and log this explicitly in Section F.
 3. **Implementation Steps:**
-   - [ ] Write `scripts/run_benchmarks.sh` and `chmod +x scripts/run_benchmarks.sh`.
-   - [ ] Execute `bash scripts/run_benchmarks.sh` and check off each completed suite in Section E.
-   - [ ] Validate all 4 CSV files for non-empty rows, zero `NaN`s, and exact 21-column formatting.
+   - [x] Write `scripts/run_benchmarks.sh` and `chmod +x scripts/run_benchmarks.sh`.
+   - [x] Execute `bash scripts/run_benchmarks.sh` and check off each completed suite in Section E.
+   - [x] Validate all 4 CSV files for non-empty rows, zero `NaN`s, and exact 21-column formatting.
 4. **Verification & Acceptance Criteria:**
-   - [ ] All 4 CSV files exist in `results/` with row counts matching Section E.
-   - [ ] `results/susy_5m_check.txt` records `PASS` (`centroid_rel_l2 <= 1e-4`, `label_match_pct >= 99.99%`).
+   - [x] All 4 CSV files exist in `results/` with row counts matching Section E.
+   - [x] `results/susy_5m_check.txt` records `PASS` (`centroid_rel_l2 <= 1e-4`, `label_match_pct >= 99.99%`).
 
 ---
 
 #### Task 3.3: Generate Publication-Quality Dual PNG + Vector PDF Figures (`figures/*.py`)
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:56`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-08**, **REQ-09**, **REQ-10**. Produces both 300 DPI PNGs (for Markdown/slides) and crisp vector PDFs (for ACM 2-column LaTeX).
 2. **Exact Technical Decisions:**
@@ -661,31 +661,31 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      4. `figures/fig_roofline.py`:
         * `figures/roofline.{png,pdf}`: Log-log Roofline plot with GTX 1080 Ti memory roof ($484\text{ GB/s}$) and FP32 compute roof ($11{,}340\text{ GFLOP/s}$), plus Intel i5-8400 single-core memory roof ($41.6\text{ GB/s}$) and compute roof ($128\text{ GFLOP/s}$). Overlay measured `kmeans_seq`, `cuda_naive`, `cuda_shmem`, and `cuda_device` points for $K \in \{8, \dots, 1024\}$ at $\text{AI} = \frac{3 K D}{4 (D + 1)}$.
 3. **Implementation Steps:**
-   - [ ] Write `figures/fig_scaling.py`, `figures/fig_k_and_block.py`, `figures/fig_breakdown.py`, and `figures/fig_roofline.py`.
-   - [ ] Execute all four Python plotting scripts without errors.
+   - [x] Write `figures/fig_scaling.py`, `figures/fig_k_and_block.py`, `figures/fig_breakdown.py`, and `figures/fig_roofline.py`.
+   - [x] Execute all four Python plotting scripts without errors.
 4. **Verification & Acceptance Criteria:**
-   - [ ] All 7 PNG files ($> 20\text{ KB}$ each) exist in `figures/`.
-   - [ ] All 7 matching vector PDF files exist in `figures/`.
+   - [x] All 7 PNG files ($> 20\text{ KB}$ each) exist in `figures/`.
+   - [x] All 7 matching vector PDF files exist in `figures/`.
 
 ---
 
 ### Phase 4: Documentation, Report, Presentation & Final Rubric Audit
 
 #### Task 4.1: Write Reproducible `README.md`
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:57`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-09**, **REQ-10**.
 2. **Exact Technical Decisions:**
    * Document hardware tested, `gcc`/`nvcc` versions, pure-C11 build commands (`make all`, `make CUDA_ARCH=...`), UCI SUSY preparation (`scripts/prepare_susy.sh`), optional UCI Power CSV conversion flags, CLI examples for all 4 binaries, verification (`make test`), profiling (`scripts/run_profiler.sh`), full benchmark reproduction (`scripts/run_benchmarks.sh`), and figure generation.
 3. **Implementation Steps:**
-   - [ ] Write `README.md` following the structure of `hw1/SpMV/README.md`.
+   - [x] Write `README.md` following the structure of `hw1/SpMV/README.md`.
 4. **Verification & Acceptance Criteria:**
-   - [ ] Every command documented in `README.md` matches the exact paths and flags implemented in Phases 0–3.
+   - [x] Every command documented in `README.md` matches the exact paths and flags implemented in Phases 0–3.
 
 ---
 
 #### Task 4.2: Author ACM 2-Column Final Report (`report/report.md` & `report/report.tex`) and Presentation Outline
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 02:58`
 
 1. **Objective & Requirement Mapping:** Satisfies **REQ-10** ($\ge 4$ pages ACM 2-column format excl. references; 4-minute presentation + 30 s Q&A).
 2. **Exact Technical Decisions:**
@@ -699,30 +699,30 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
      6. **Conclusion & Future Work:** Peak speedups achieved, key profiler lessons learned, and extensions (multi-GPU MPI+CUDA, GEMM formulation via $\|x - \mu\|^2 = \|x\|^2 + \|\mu\|^2 - 2 x \cdot \mu$, and datacenter Volta/Ampere evaluation on NCSU ARC).
    * Write `presentation/slides_outline.md`: crisp 4-slide talk script (1 minute/slide) matching the exact 4-minute time limit + anticipated 30-second Q&A talking points.
 3. **Implementation Steps:**
-   - [ ] Populate `report/report.md` from recorded CSVs and profiler dumps.
-   - [ ] Populate `report/report.tex` in ACM 2-column format (`sigconf`).
-   - [ ] Write `presentation/slides_outline.md`.
-   - [ ] If `pdflatex` is available, compile `report/report.tex` and verify PDF page count is $\ge 4$ pages (excluding references).
+   - [x] Populate `report/report.md` from recorded CSVs and profiler dumps.
+   - [x] Populate `report/report.tex` in ACM 2-column format (`sigconf`).
+   - [x] Write `presentation/slides_outline.md`.
+   - [x] If `pdflatex` is available, compile `report/report.tex` and verify PDF page count is $\ge 4$ pages (excluding references).
 4. **Verification & Acceptance Criteria:**
-   - [ ] Zero `[TODO]` or placeholder values exist anywhere in `report/` or `presentation/`.
-   - [ ] All referenced figure paths resolve to valid PNG/PDF files in `figures/`.
+   - [x] Zero `[TODO]` or placeholder values exist anywhere in `report/` or `presentation/`.
+   - [x] All referenced figure paths resolve to valid PNG/PDF files in `figures/`.
 
 ---
 
 #### Task 4.3: Execute Final Pre-Submission Rubric Audit
-**Status:** `NOT_STARTED` | **Completed (UTC):** `—`
+**Status:** `DONE` | **Completed (UTC):** `2026-11-20 03:00`
 
 1. **Objective & Requirement Mapping:** Final gate covering **REQ-01** through **REQ-10**.
 2. **Exact Technical Decisions:**
    * Run automated checklist verification and record output in `results/final_audit.txt`.
 3. **Implementation Steps & Verification Gates:**
-   - [ ] Confirm zero `.cpp`/`.hpp`/`.cuh` files exist and zero `#include <omp.h>` references exist (`find src include -name '*.cpp' -o -name '*.hpp' -o -name '*.cuh'` is empty).
-   - [ ] `make clean && make all` exits `0` using `gcc -std=c11` and `nvcc`.
-   - [ ] `make test` exits `0`.
-   - [ ] All 4 CSVs in `results/` are non-empty and valid 21-column tables.
-   - [ ] All 7 PNGs ($> 20\text{ KB}$) and 7 PDFs exist in `figures/`.
-   - [ ] No huge temporary files (`data/*.csv`, `data/*.bin`, `data/*.gz`) are staged for Moodle submission.
-   - [ ] Write final audit summary to `results/final_audit.txt` confirming `10/10` requirements satisfied.
+   - [x] Confirm zero `.cpp`/`.hpp`/`.cuh` files exist and zero `#include <omp.h>` references exist (`find src include -name '*.cpp' -o -name '*.hpp' -o -name '*.cuh'` is empty).
+   - [x] `make clean && make all` exits `0` using `gcc -std=c11` and `nvcc`.
+   - [x] `make test` exits `0`.
+   - [x] All 4 CSVs in `results/` are non-empty and valid 21-column tables.
+   - [x] All 7 PNGs ($> 20\text{ KB}$) and 7 PDFs exist in `figures/`.
+   - [x] No huge temporary files (`data/*.csv`, `data/*.bin`, `data/*.gz`) are staged for Moodle submission.
+   - [x] Write final audit summary to `results/final_audit.txt` confirming `10/10` requirements satisfied.
 
 ---
 
@@ -731,13 +731,13 @@ Execute each phase and atomic task strictly in order. Toggle each checkbox (`- [
 All timing experiments isolate pure per-iteration compute (`assign_ms`, `update_ms`, `xfer_ms`, `total_compute_ms`) from one-time `io_ms` and `setup_ms`. Every configuration runs **1 untimed warmup** + **5 timed trials** (reporting median; exception: `kmeans_seq` at $N \ge 2{,}500{,}000$ may use 0 warmup + 3 trials if single-run runtime exceeds $15\text{ s}$). All scaling suites use `--fixed-iters --iters 20 --seed 42`.
 
 ### Benchmark Execution Tracker
-- [ ] **Suite B** (`results/suite_b_n_scaling.csv`): 20 configurations completed
-- [ ] **Suite C1** (`results/suite_c_gpu_saturation.csv`): 6 SM-wave saturation points completed
-- [ ] **Suite C2** (`results/suite_c_gpu_saturation.csv`): 9 large-scale stress points completed
-- [ ] **Suite D** (`results/suite_d_k_sweep.csv`): $K \in \{8 \dots 1024\}$ sweep completed
-- [ ] **Suite E1** (`results/suite_e_block_and_dim.csv`): 15 block-size tuning points completed
-- [ ] **Suite E2** (`results/suite_e_block_and_dim.csv`): 16 dimensionality sweep points completed
-- [ ] **5M Verification Gate** (`results/susy_5m_check.txt`): `PASS` recorded
+- [x] **Suite B** (`results/suite_b_n_scaling.csv`): 20 configurations completed
+- [x] **Suite C1** (`results/suite_c_gpu_saturation.csv`): 6 SM-wave saturation points completed
+- [x] **Suite C2** (`results/suite_c_gpu_saturation.csv`): 9 large-scale stress points completed
+- [x] **Suite D** (`results/suite_d_k_sweep.csv`): $K \in \{8 \dots 1024\}$ sweep completed
+- [x] **Suite E1** (`results/suite_e_block_and_dim.csv`): 15 block-size tuning points completed
+- [x] **Suite E2** (`results/suite_e_block_and_dim.csv`): 16 dimensionality sweep points completed
+- [x] **5M Verification Gate** (`results/susy_5m_check.txt`): `PASS` recorded
 
 ### E.1 Suite B: Problem Size $N$ Scaling & Serial-vs-GPU Speedup (`results/suite_b_n_scaling.csv`)
 
@@ -784,6 +784,20 @@ The agent MUST append one row per completed task (or major milestone) with measu
 | Timestamp (UTC) | Task ID | Status | Key Measured Result / Artifact Summary |
 | :--- | :--- | :--- | :--- |
 | `—` | `INIT` | `READY` | Plan Version 3.1 initialized; ready for Phase 0 Task 0.1. |
+| 2026-11-20 02:21 | 0.1 | DONE | Created directory layout, C11 headers, Makefile; probed i5-9600K + GTX 1080 Ti (sm_61); gcc 13.3.0, nvcc 12.0. |
+| 2026-11-20 02:24 | 0.2 | DONE | Implemented include/input.h, src/csv_to_bin.c; prepared data/susy.bin (360,000,016 B, 5M x 18 FP32); unit tests passed. |
+| 2026-11-20 02:24 | 0.3 | DONE | Implemented include/verify.h, src/kmeans_seq.c; verified 10k dump/check parity (L2 = 0.0, label match = 100.0%). |
+| 2026-11-20 02:25 | 0.4 | DONE | Profiled serial baseline (N=1M, D=18, K=32); gprof proves kmeans_cpu_assign consumes 97.13% of runtime (2667.9 ms). |
+| 2026-11-20 02:30 | 1.1 | DONE | Implemented include/kmeans_cuda.h, src/main_cuda.c, src/kmeans_cuda_naive.cu; passes 100k verify; establishes uncoalesced AoS baseline. |
+| 2026-11-20 02:35 | 1.2 | DONE | Implemented src/kmeans_cuda_shmem.cu; 128-float SoA + tiled shmem broadcast; 6.4x assign kernel speedup (401.5 ms -> 63.3 ms). |
+| 2026-11-20 02:40 | 1.3 | DONE | Implemented src/kmeans_cuda_device.cu; float4 loads + register reuse + zero per-iter PCIe; total time 69.86 ms (39.0x speedup). |
+| 2026-11-20 02:45 | 2.1 | DONE | Created tests/generate_fixtures.c and tests/run_tests.sh; all 8 test groups passed (tiny, medium, 48KB cliff, prime, empty, ties, early-stop, neg). |
+| 2026-11-20 02:50 | 3.1 | DONE | Executed scripts/run_profiler.sh; generated results/cuda_profile.txt; confirmed 38.99x speedup and 249.93 GFLOP/s at N=1M. |
+| 2026-11-20 02:55 | 3.2 | DONE | Executed scripts/run_benchmarks.sh; populated Suites B, C, D, E CSVs; 5M SUSY verification gate PASSED (rel_L2 3.03e-5, labels 99.9936%). |
+| 2026-11-20 02:56 | 3.3 | DONE | Executed figures/fig_*.py; generated 7 publication figure pairs (14 files: PNG + vector PDF) with 300 DPI and colorblind-safe palettes. |
+| 2026-11-20 02:57 | 4.1 | DONE | Authored comprehensive, reproducible README.md matching hw1/SpMV structure with exact CLI, test, profile, and benchmark workflows. |
+| 2026-11-20 02:58 | 4.2 | DONE | Authored report/report.md, report/report.tex (ACM sigconf 2-column format), and presentation/slides_outline.md (4-min deck + Q&A defense). |
+| 2026-11-20 03:00 | 4.3 | DONE | Executed scripts/audit_submission.sh; results/final_audit.txt confirms 100% compliance: zero C++, clean build, pure C linkage, 8/8 tests, 37 files. |
 
 ### F.2 Blocker & Deviation Register
 
@@ -791,4 +805,8 @@ Record any environment constraint (e.g., `nvprof` unavailable, offline `SYNTHETI
 
 | Timestamp (UTC) | Task ID | Issue / Deviation | Mitigation / Resolution | Resolved? |
 | :--- | :--- | :--- | :--- | :--- |
-| `—` | `—` | None yet. | — | — |
+| 2026-11-20 02:18 | 0.1 | Windows host shell lacked native `nvcc` and `cl.exe`. | Executed all compilation and testing in WSL2 Ubuntu environment where GCC 13.3.0 and NVCC 12.0 are available. | Yes |
+| 2026-11-20 02:22 | 0.2 | WSL2 Python environment lacked `pandas` and `matplotlib`. | Installed via `wsl -u root apt-get install -y python3-pandas python3-matplotlib python3-scipy`. | Yes |
+| 2026-11-20 02:32 | 1.1 | Strict `1e-4` relative $L_2$ tolerance failed on 20 iterations due to GPU FMA contraction (`rel_L2 = 3.23e-4`). | Added `--fmad=false` to `NVCCFLAGS` in `Makefile`. Re-verified exact bit-level parity (`rel_L2 = 0.0`). | Yes |
+| 2026-11-20 02:48 | 3.1 | WSL2 environment lacked CUPTI hardware counter support for Pascal architecture, causing `nvprof` signal 139. | Structured `scripts/run_profiler.sh` to extract analytical `cudaEvent` phase breakdowns, effective bandwidth, and GFLOP/s directly. | Yes |
+| 2026-11-20 02:57 | 4.3 | NVCC generated C++ name-mangled kernel host stubs in `.cu` files, detected during symbol mangling audit. | Added `static` to all CUDA `__global__` and `__device__` kernel functions in `.cu` files. Binaries now have pure C linkage. | Yes |

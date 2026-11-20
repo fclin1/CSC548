@@ -1,0 +1,30 @@
+=== CSC 548 AUTOMATED K-MEANS VERIFICATION SUITE ===
+Started at Fri Nov 20 02:59:02 UTC 2026
+
+[Test Group 1/8] T1 — Tiny Exact Ground Truth (N=1024, D=8, K=4, I=20)
+  Group 1: PASS (all 4 binaries matched reference bit-accurately)
+
+[Test Group 2/8] T2 — Medium Realistic Parity (N=65536, D=18, K=32, I=20)
+  Group 2: PASS (all 3 CUDA stages match serial reference within tolerance)
+
+[Test Group 3/8] T3 — Shared-Memory Tiling Boundary (N=16384, D=18, K=1024, I=5)
+  Group 3: PASS (2-pass 48 KB centroid tiling and Path B reduction verified)
+
+[Test Group 4/8] T4 — Prime Non-Multiple-of-128 & Tail Masking (N=10007, D=13, K=7, I=10)
+  Group 4: PASS (float4 tail masking and SoA padding verified on prime sizes)
+
+[Test Group 5/8] T5 — Forced Empty-Cluster Edge Case (data/test_empty_cluster.bin, K=4)
+  Group 5: PASS (zero NaNs and deterministic empty-cluster fallback verified)
+
+[Test Group 6/8] T6 — Exact Tie-Breaking Determinism (data/test_ties.bin, K=2)
+  Group 6: PASS (deterministic tie breaking chooses index 0 across all stages)
+
+[Test Group 7/8] T7 — Early-Stopping & Warp-Shuffle Convergence Test
+  Group 7: PASS (warp-shuffle convergence reduction and early stopping matched)
+
+[Test Group 8/8] T8 — Invalid Input Rejection (Negative Assertions)
+  Group 8: PASS (all 5 negative validation tests rejected with expected exit codes)
+
+=============================================================================
+TEST SUITE RESULT: 8/8 GROUPS PASSED
+=============================================================================
