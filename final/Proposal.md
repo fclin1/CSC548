@@ -11,7 +11,7 @@ First I will implement and measure the running time on a serial baseline. Then I
 **Hardware and Experimental Setup**  
 I will use either the NCSU ARC compute nodes that are equipped with GPUs, or I will run it locally on the NVidia 1080 Ti that I have on my desktop.
 
-As for the dataset, I’m still considering between several, but among them include the Individual Household Electric Power Consumption from the UCI Machine Learning Repository, which is used frequently as a standard benchmark for clustering. 
+As for the dataset, I will be using UCI SUSY.
 
 **Milestones**
 
